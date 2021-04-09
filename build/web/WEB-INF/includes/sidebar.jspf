@@ -40,9 +40,9 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Locations:</h6>
                         <a class="collapse-item" href="#">Warehouse 1</a>
-                        <a class="collapse-item" href="#">Warehouse 2</a>
-                        <a class="collapse-item" href="#">Annex 1</a>
-                        <a class="collapse-item" href="#">Supply Depot 1</a>
+                        <%
+                            //use getLocations.java to fetch location info then list here
+                        %>
                     </div>
                 </div>
             </li>
@@ -117,12 +117,12 @@
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
-            <!-- Sidebar Message -->
+            <!-- Sidebar Message 
             <div class="sidebar-card">
                 <img class="sidebar-card-illustration mb-2" src="img/undraw_rocket.svg" alt="">
                 <p class="text-center mb-2"><strong>SB Admin Pro</strong> is packed with premium features, components, and more!</p>
                 <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a>
-            </div>
+            </div>-->
 
         </ul>
         <!-- End of Sidebar -->
