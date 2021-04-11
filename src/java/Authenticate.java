@@ -82,7 +82,7 @@ public class Authenticate extends HttpServlet {
             throws ServletException, IOException {
 
         // Get the post input 
-        this.username = request.getParameter("emailAddress");
+        this.username = request.getParameter("userfield");
         this.pword = request.getParameter("pfield");
         this.isValid = validate(this.username, this.pword);
          response.setContentType("text/html;charset=UTF-8");
@@ -90,7 +90,7 @@ public class Authenticate extends HttpServlet {
         if (isValid) {
             // Create a session object if it is already not created.
             session = request.getSession(true);
-            session.setAttribute("UserEmail", username);         
+            session.setAttribute("UserName", username);         
             session.setAttribute("UserID", user_id);
 
             // Send to the Home JSP page              
@@ -127,13 +127,11 @@ public class Authenticate extends HttpServlet {
             Connection conn=DriverManager.getConnection(
                     "jdbc:mysql://datacron.ableit.local:3306/GROUP5PRJ","grp5_dbsa","Grp5iveRul3z!!");
             Statement stmt = conn.createStatement();
-            String sql = "select user_id from g5_users where email = '" + this.username + "'";
-            System.out.println("username is: " + this.username + ", and user_id = " + user_id);
+            String sql = "select user_id from users where username = '" + this.username + "'";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 user_id = rs.getInt(1);
             }
-            System.out.println("username is: " + this.username + ", and user_id = " + user_id);
             if (user_id > 0) {                
                 String sql2 = "select user_id from user_info where user_id = " + user_id + " and password = '" + this.pword + "'";
                 ResultSet rs2 = stmt.executeQuery(sql2);
@@ -145,6 +143,9 @@ public class Authenticate extends HttpServlet {
                    status=true;
                }
             }
+            //don't forget to close connections
+            rs.close();
+            conn.close();
 
         } catch (Exception e) {
             System.out.println(e);

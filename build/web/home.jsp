@@ -4,7 +4,7 @@
     Author     : Scott Forsyth
 --%>
 <%   
-    if(session.getAttribute("UserEmail") == null){
+    if(session.getAttribute("UserName") == null){
         request.getRequestDispatcher("/index.jsp").forward(request,response);
     }
 %>
