@@ -127,7 +127,7 @@ public class GetItems extends HttpServlet {
             Statement stmt = conn.createStatement();
             String sql = "select item_id ,item_name, item_qty, item_loc from items";
             
-            if(this.sku != null || this.location != null || this.name != null || this.qty !=null){
+            if(this.sku != null && !this.sku.trim().isEmpty() || this.location != null && !this.location.trim().isEmpty() || this.name != null && !this.name.trim().isEmpty() || this.qty != null && !this.qty.trim().isEmpty()){
                 sql += " WHERE ";
             }
             
