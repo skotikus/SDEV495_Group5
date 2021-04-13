@@ -10,13 +10,13 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.DriverManager;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.sql.*;
 
 public class Authenticate extends HttpServlet {
 
@@ -82,7 +82,7 @@ public class Authenticate extends HttpServlet {
             throws ServletException, IOException {
 
         // Get the post input 
-        this.username = request.getParameter("emailAddress");
+        this.username = request.getParameter("username");
         this.pword = request.getParameter("pfield");
         this.isValid = validate(this.username, this.pword);
          response.setContentType("text/html;charset=UTF-8");
@@ -90,7 +90,7 @@ public class Authenticate extends HttpServlet {
         if (isValid) {
             // Create a session object if it is already not created.
             session = request.getSession(true);
-            session.setAttribute("UserEmail", username);         
+            session.setAttribute("UserName", username);         
             session.setAttribute("UserID", user_id);
 
             // Send to the Home JSP page              
@@ -127,7 +127,7 @@ public class Authenticate extends HttpServlet {
             Connection conn=DriverManager.getConnection(
                     "jdbc:mysql://datacron.ableit.local:3306/GROUP5PRJ","grp5_dbsa","Grp5iveRul3z!!");
             Statement stmt = conn.createStatement();
-            String sql = "select user_id from g5_users where email = '" + this.username + "'";
+            String sql = "select user_id from users where username = '" + this.username + "'";
             System.out.println("username is: " + this.username + ", and user_id = " + user_id);
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {

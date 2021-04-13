@@ -21,6 +21,10 @@
         <servlet-name>GetLocations</servlet-name>
         <servlet-class>GetLocations</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GetItems</servlet-name>
+        <servlet-class>GetItems</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>/faces/*</url-pattern>
@@ -36,6 +40,10 @@
     <servlet-mapping>
         <servlet-name>GetLocations</servlet-name>
         <url-pattern>/GetLocations</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetItems</servlet-name>
+        <url-pattern>/GetItems</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

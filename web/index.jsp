@@ -141,11 +141,11 @@ form{
 						<h2>Log In</h2>
 					</div>
 					<div class="row">
-                                            <% if (session.getAttribute("UserEmail") == null) {
+                                            <% if (session.getAttribute("UserName") == null) {
                                             %>
 						<form action="Authenticate" class="form-group" method="post">
 							<div class="row">
-								<input type="text" name="emailAddress" id="username" class="form__input" placeholder="Username">
+								<input type="text" name="username" id="username" class="form__input" placeholder="Username">
 							</div>
 							<div class="row">
 								<!-- <span class="fa fa-lock"></span> -->

@@ -18,10 +18,10 @@
     </div>
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Section 1 Title</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Work Order Example</h6>
             <br />
             <div class="row">
-                <p>Content Here</p>
+                <p>This page was linked to from work order. Have a serlet find the order and post the information.</p>
             </div>
         </div>
     </div>

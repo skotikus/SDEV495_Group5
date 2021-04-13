@@ -14,14 +14,14 @@
 <!-- Begin Page Content -->
 <div class="container-fluid">    
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Page Title</h1>
+        <h1 class="h3 mb-0 text-gray-800">Application Settings</h1>
     </div>
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Section 1 Title</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Settings Section 1</h6>
             <br />
             <div class="row">
-                <p>Content Here</p>
+                <p>list changable system settings here</p>
             </div>
         </div>
     </div>
