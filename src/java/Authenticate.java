@@ -82,7 +82,11 @@ public class Authenticate extends HttpServlet {
             throws ServletException, IOException {
 
         // Get the post input 
+<<<<<<< HEAD
         this.username = request.getParameter("username");
+=======
+        this.username = request.getParameter("userfield");
+>>>>>>> master
         this.pword = request.getParameter("pfield");
         this.isValid = validate(this.username, this.pword);
          response.setContentType("text/html;charset=UTF-8");
@@ -128,12 +132,14 @@ public class Authenticate extends HttpServlet {
                     "jdbc:mysql://datacron.ableit.local:3306/GROUP5PRJ","grp5_dbsa","Grp5iveRul3z!!");
             Statement stmt = conn.createStatement();
             String sql = "select user_id from users where username = '" + this.username + "'";
+<<<<<<< HEAD
             System.out.println("username is: " + this.username + ", and user_id = " + user_id);
+=======
+>>>>>>> master
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 user_id = rs.getInt(1);
             }
-            System.out.println("username is: " + this.username + ", and user_id = " + user_id);
             if (user_id > 0) {                
                 String sql2 = "select user_id from user_info where user_id = " + user_id + " and password = '" + this.pword + "'";
                 ResultSet rs2 = stmt.executeQuery(sql2);
@@ -145,6 +151,9 @@ public class Authenticate extends HttpServlet {
                    status=true;
                }
             }
+            //don't forget to close connections
+            rs.close();
+            conn.close();
 
         } catch (Exception e) {
             System.out.println(e);

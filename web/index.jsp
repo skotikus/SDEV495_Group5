@@ -145,7 +145,11 @@ form{
                                             %>
 						<form action="Authenticate" class="form-group" method="post">
 							<div class="row">
+<<<<<<< HEAD
 								<input type="text" name="username" id="username" class="form__input" placeholder="Username">
+=======
+								<input type="text" name="userfield" id="username" class="form__input" placeholder="Username">
+>>>>>>> master
 							</div>
 							<div class="row">
 								<!-- <span class="fa fa-lock"></span> -->
