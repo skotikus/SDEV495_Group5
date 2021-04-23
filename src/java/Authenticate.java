@@ -121,11 +121,9 @@ public class Authenticate extends HttpServlet {
     public boolean validate(String name, String pass) {
         boolean status = false;
         int hitcnt=0;
-
+        Connection conn = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver"); 
-            Connection conn=DriverManager.getConnection(
-                    "jdbc:mysql://datacron.ableit.local:3306/GROUP5PRJ","grp5_dbsa","Grp5iveRul3z!!");
+            conn = Database.getConnection();
             Statement stmt = conn.createStatement();
             String sql = "select user_id from users where username = '" + this.username + "'";
             System.out.println("username is: " + this.username + ", and user_id = " + user_id);

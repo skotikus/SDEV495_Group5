@@ -120,10 +120,9 @@ public class GetItems extends HttpServlet {
         System.out.println(this.location);
         System.out.println(this.name);
         System.out.println(this.qty);
+        Connection conn = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver"); 
-            Connection conn=DriverManager.getConnection(
-                    "jdbc:mysql://datacron.ableit.local:3306/GROUP5PRJ","grp5_dbsa","Grp5iveRul3z!!");
+            conn = Database.getConnection();
             Statement stmt = conn.createStatement();
             String sql = "select item_id ,item_name, item_qty, item_loc from items";
             
