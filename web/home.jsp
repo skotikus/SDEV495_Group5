@@ -12,10 +12,10 @@
 <!DOCTYPE html>
 <%@include file="WEB-INF/includes/head.jspf" %>
 <!-- Begin Page Content -->
-<div class="container-fluid">    
-
+<div class="container-fluid">
+<% int andrew = 10;  %>
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+        <h1 class="h3 mb-0 text-gray-800">Dashboard <%= andrew %></h1>
     </div>
     
     <div class="card shadow mb-4">

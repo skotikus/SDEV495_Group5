@@ -121,7 +121,7 @@ public class Authenticate extends HttpServlet {
     public boolean validate(String name, String pass) {
         boolean status = false;
         int hitcnt=0;
-        Connection conn = null;
+        Connection conn;
         try {
             conn = Database.getConnection();
             Statement stmt = conn.createStatement();
