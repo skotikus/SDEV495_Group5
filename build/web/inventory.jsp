@@ -18,7 +18,7 @@
             <div class="card-header py-3">
 		<h6 class="m-0 font-weight-bold text-primary">Search Items</h6>
             <div class="row">
-                <form action="GetItems" class="form-group input-group" method="post">
+                <form action="Items" class="form-group input-group" method="post">
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                     </div>
@@ -35,11 +35,11 @@
                         <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                     </div>
                     <input name="itemLOC" class="form-control" placeholder="Location" type="text">
-                    <button action="GetItems" type="submit" class="btn btn-primary">Search</button>
+                    <button action="Items" type="submit" class="btn btn-primary">Search</button>
                 </form><!-- form-group// -->
             </div>
 		<div class="card-body">
-			<div class="table-responsive">
+			<div class="table-responsive" id="itemTable">
 				<% 
                                     String itemTableVar = "No Search Results";
                                     if(session.getAttribute("itemTable") != null){
@@ -50,8 +50,5 @@
 			</div>
 		</div>
 	</div>
-    
-    
-    
 </div>
 <%@include file="WEB-INF/includes/footer.jspf" %>

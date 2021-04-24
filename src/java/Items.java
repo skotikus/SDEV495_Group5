@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -21,7 +20,7 @@ import javax.servlet.RequestDispatcher;
  *
  * @author scott
  */
-public class GetItems extends HttpServlet {
+public class Items extends HttpServlet {
     
     private HttpSession session;
     private String sku;
@@ -93,7 +92,7 @@ public class GetItems extends HttpServlet {
             session = request.getSession(true);
             session.setAttribute("itemTable", queryItems());
             
-            RequestDispatcher dispatcher = request.getRequestDispatcher("items.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("inventory.jsp");
             dispatcher.forward(request, response);
 
         } catch (Exception e) {
@@ -158,7 +157,7 @@ public class GetItems extends HttpServlet {
                         
             ResultSet rs = stmt.executeQuery(sql);
             
-            finalOut = "<table class=\"table table-bordered\" id=\"dataTable\" width=\"100%\" cellspacing=\"0\">\n" +
+            finalOut = "<table class=\"table table-bordered table-hover\" id=\"dataTable\" width=\"100%\" cellspacing=\"0\">\n" +
                                         "<thead>\n" +
 "						<tr>\n" +
 "                                                    <th>SKU</th>\n" +
@@ -178,7 +177,7 @@ public class GetItems extends HttpServlet {
 "                                       <tbody>";
             
             while (rs.next()) {
-                finalOut += "<tr>\n" +
+                finalOut += "<tr onclick=\"window.location='item.jsp?item=" + rs.getString(1) +"'\">\n" +
 "                               <td>" + rs.getString(1) + "</td>\n" +
 "                               <td>" + rs.getString(2) + "</td>\n" +
 "                               <td>" + rs.getString(3) + "</td>\n" +

@@ -20,7 +20,7 @@ import java.util.ArrayList;
  *
  * @author scott
  */
-public class GetLocations extends HttpServlet {
+public class Locations extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -89,10 +89,9 @@ public class GetLocations extends HttpServlet {
 
     //gets location info
     public void getLocationInfo(){
-        
+        Connection conn;
         try {
-            Connection conn=DriverManager.getConnection(
-                "jdbc:mysql://datacron.ableit.local:3306/GROUP5PRJ","grp5_dbsa","Grp5iveRul3z!!");
+            conn = Database.getConnection();
             Statement stmt = conn.createStatement();
             String sql = "select location_id,loc_name,address_street,address_city,zipcode from location_info;";
             ResultSet rs = stmt.executeQuery(sql);
@@ -100,9 +99,12 @@ public class GetLocations extends HttpServlet {
             while (rs.next()) { 
                 //iterate through to get location info from resultset 
             }
+            conn.close();
         }
         catch (Exception ex){
             System.out.println(ex);
         }
+        
+        
     }
 }
