@@ -149,11 +149,19 @@ public class Orders extends HttpServlet {
 
         String finalOut = "DEGBUG";
         Connection conn = null;
-
+        
+        final String SQL_LAST_WORK_ID_QUERY = 
+            "SELECT work_id FROM work_orders ORDER BY work_id DESC limit 1;";
+        int lastWorkID = null;
+        
+        
 
         try{
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sqlOrderQuery);
+            lastWorkID = rs.getInt(1);
 
-        
+
     
         } catch (Exception e) {
             System.out.println(e);
@@ -166,10 +174,11 @@ public class Orders extends HttpServlet {
 
         String finalOut = "DEGBUG";
         Connection conn = null;
-
+        Statement stmt = conn.createStatement();
 
         try{
-
+            
+            String sqlDeleteQuery = "delete from work_id"
         
     
         } catch (Exception e) {
@@ -183,7 +192,7 @@ public class Orders extends HttpServlet {
 
         String finalOut = "DEGBUG";
         Connection conn = null;
-
+        Statement stmt = conn.createStatement();
 
         try{
 
