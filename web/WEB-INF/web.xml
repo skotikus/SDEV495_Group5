@@ -18,12 +18,16 @@
         <servlet-class>Logout</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>GetLocations</servlet-name>
-        <servlet-class>GetLocations</servlet-class>
+        <servlet-name>Locations</servlet-name>
+        <servlet-class>Locations</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>GetItems</servlet-name>
-        <servlet-class>GetItems</servlet-class>
+        <servlet-name>Items</servlet-name>
+        <servlet-class>Items</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Users</servlet-name>
+        <servlet-class>Users</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
@@ -38,12 +42,16 @@
         <url-pattern>/Logout</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>GetLocations</servlet-name>
-        <url-pattern>/GetLocations</url-pattern>
+        <servlet-name>Locations</servlet-name>
+        <url-pattern>/Locations</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>GetItems</servlet-name>
-        <url-pattern>/GetItems</url-pattern>
+        <servlet-name>Items</servlet-name>
+        <url-pattern>/Items</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Users</servlet-name>
+        <url-pattern>/Users</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

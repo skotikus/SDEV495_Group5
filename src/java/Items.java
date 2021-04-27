@@ -11,10 +11,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.RequestDispatcher;
 
 /**
@@ -28,6 +29,12 @@ public class Items extends HttpServlet {
     private String location;
     private String qty;
     private String name;
+    private String color;
+    public Integer itemSKU;
+    public String itemName;
+    public Integer itemQTY;
+    public String itemLoc;
+    public String itemColor;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -69,7 +76,20 @@ public class Items extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
+        String action = request.getParameter("action");
+        String itemNum = request.getParameter("item");
+        if("getItem".equals(action)){
+            List<String> itemProperties = getItem(itemNum);
+            request.setAttribute("itemSKU", itemProperties.get(0));
+            request.setAttribute("itemName", itemProperties.get(1));
+            request.setAttribute("itemQTY", itemProperties.get(2));
+            request.setAttribute("itemLoc", itemProperties.get(3));
+            request.setAttribute("itemColor", itemProperties.get(4));
+        }
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("item.jsp");
+        dispatcher.forward(request, response);
     }
 
     /**
@@ -88,12 +108,12 @@ public class Items extends HttpServlet {
         this.location = request.getParameter("itemLOC");
         this.name = request.getParameter("itemName");
         this.qty = request.getParameter("itemQTY");
+        this.color = request.getParameter("itemColor");
         
-        try{
-            session = request.getSession(true);
-            session.setAttribute("itemTable", queryItems());
+        try{            
+            request.setAttribute("itemTable", listItems());
             
-            RequestDispatcher dispatcher = request.getRequestDispatcher("items.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("inventory.jsp");
             dispatcher.forward(request, response);
 
         } catch (Exception e) {
@@ -113,20 +133,16 @@ public class Items extends HttpServlet {
         return "Short description";
     }// </editor-fold>
     
-    public String queryItems(){
+    public String listItems(){
         
-        String finalOut = null;
-        System.out.println(this.sku);
-        System.out.println(this.location);
-        System.out.println(this.name);
-        System.out.println(this.qty);
+        String finalOut = null;        
         Connection conn = null;
         try {
             conn = Database.getConnection();
             Statement stmt = conn.createStatement();
-            String sql = "select item_id ,item_name, item_qty, item_loc from items";
+            String sql = "select item_id ,item_name, item_qty, item_loc, item_color from items";
             
-            if(this.sku != null && !this.sku.trim().isEmpty() || this.location != null && !this.location.trim().isEmpty() || this.name != null && !this.name.trim().isEmpty() || this.qty != null && !this.qty.trim().isEmpty()){
+            if(this.sku != null && !this.sku.trim().isEmpty() || this.location != null && !this.location.trim().isEmpty() || this.name != null && !this.name.trim().isEmpty() || this.qty != null && !this.qty.trim().isEmpty() || this.color != null && !this.color.trim().isEmpty()){
                 sql += " WHERE ";
             }
             
@@ -153,18 +169,25 @@ public class Items extends HttpServlet {
                     sql += " AND ";
                 }
                 sql += "item_qty = " + this.qty;
-            }    
+            }
+            if(this.color != null && !this.color.trim().isEmpty()){
+                if(this.sku != null && !this.sku.trim().isEmpty() || this.location != null && !this.location.trim().isEmpty() || this.name != null && !this.name.trim().isEmpty() || this.qty != null && !this.qty.trim().isEmpty()){
+                    sql += " AND ";
+                }
+                sql += "item_color = '" + this.color + "'";
+            }  
             
-                        
+            //System.out.println(sql);  //For debugging
             ResultSet rs = stmt.executeQuery(sql);
             
-            finalOut = "<table class=\"table table-bordered\" id=\"dataTable\" width=\"100%\" cellspacing=\"0\">\n" +
+            finalOut = "<table class=\"table table-bordered table-hover\" id=\"dataTable\" width=\"100%\" cellspacing=\"0\">\n" +
                                         "<thead>\n" +
 "						<tr>\n" +
 "                                                    <th>SKU</th>\n" +
 "                                                    <th>Name</th>\n" +
 "                                                    <th>Quantity</th>\n" +
 "                                                    <th>Location</th>\n" +
+"                                                    <th>Color</th>\n" +  
 "						</tr>\n" +
 "					</thead>\n" +
 "					<tfoot>\n" +
@@ -173,16 +196,18 @@ public class Items extends HttpServlet {
 "                                                    <th>Name</th>\n" +
 "                                                    <th>Quantity</th>\n" +
 "                                                    <th>Location</th>\n" +
+"                                                    <th>Color</th>\n" +                  
 "						</tr>\n" +
 "					</tfoot>\n" + 
 "                                       <tbody>";
             
             while (rs.next()) {
-                finalOut += "<tr>\n" +
+                finalOut += "<tr onclick=\"window.location='Items?item=" + rs.getString(1) + "&action=getItem'\">\n" +
 "                               <td>" + rs.getString(1) + "</td>\n" +
 "                               <td>" + rs.getString(2) + "</td>\n" +
 "                               <td>" + rs.getString(3) + "</td>\n" +
 "                               <td>" + rs.getString(4) + "</td>\n" +
+"                               <td>" + rs.getString(5) + "</td>\n" +
 "                             </tr>";
             }
             finalOut += "</table>";
@@ -195,5 +220,32 @@ public class Items extends HttpServlet {
         
         
         return finalOut;
+    }
+    
+    public List<String> getItem(String itemID){        
+        
+        List<String> itemInfo = new ArrayList<String>();        
+        Connection conn = null;
+        try {
+            conn = Database.getConnection();
+            Statement stmt = conn.createStatement();
+            String sql = "select item_id ,item_name, item_qty, item_loc, item_color from items WHERE item_id = " + itemID;
+            
+            ResultSet rs = stmt.executeQuery(sql);
+            
+            while (rs.next()) {
+                
+                itemInfo.add(rs.getString(1));
+                itemInfo.add(rs.getString(2));
+                itemInfo.add(rs.getString(3));
+                itemInfo.add(rs.getString(4));
+                itemInfo.add(rs.getString(5));
+            }
+           
+            conn.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return itemInfo;
     }
 }
