@@ -169,7 +169,6 @@ public class Orders extends HttpServlet {
             System.out.println(e);
         }
         return "DEBUG";
-
     }
 
     public String deleteOrder() throws SQLException {
