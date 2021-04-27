@@ -25,8 +25,8 @@ public class Database {
         Connection conn = null;
         String server = "jdbc:mysql://datacron.ableit.local:3306";
         String database = "GRP5_scott";
-        String username = "scott_db";
-        String password = "vB1/LM1!@4";
+        String username = "grp5_dbsa";
+        String password = "Grp5iveRul3z!!";
         try { 
             conn = DriverManager.getConnection(server + "/" + database,username,password);
         } catch (Exception ex) {

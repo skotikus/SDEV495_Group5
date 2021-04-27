@@ -23,8 +23,7 @@ import javax.servlet.RequestDispatcher;
  * @author scott
  */
 public class Items extends HttpServlet {
-    
-    private HttpSession session;
+   
     private String sku;
     private String location;
     private String qty;

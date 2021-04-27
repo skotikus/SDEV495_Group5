@@ -3,7 +3,6 @@
     Created on : Apr 8, 2021
     Author     : Scott Forsyth
 --%>
-<%@page import="javax.mail.FetchProfile.Item"%>
 <%   
     if(session.getAttribute("UserName") == null){
         request.getRequestDispatcher("/index.jsp").forward(request,response);
@@ -12,7 +11,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%@include file="WEB-INF/includes/head.jspf" %>
-<c:out value="${Items }"></c:out>
 <!-- Begin Page Content -->
 <div class="container-fluid">    
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
