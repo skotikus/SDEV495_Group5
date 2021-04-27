@@ -36,7 +36,7 @@
                                     </div>
                                 </div>
                                 <div class="userData ml-3">
-                                    <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold">Scott Forsyth</h2>
+                                    <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold">Scott Forsyth (<%= session.getAttribute("Role").toString() %>)</h2>
                                 </div>
                             </div>
                         </div>

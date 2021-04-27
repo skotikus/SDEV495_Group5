@@ -13,9 +13,8 @@
 <%@include file="WEB-INF/includes/head.jspf" %>
 <!-- Begin Page Content -->
 <div class="container-fluid">
-<% int andrew = 10;  %>
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Dashboard <%= andrew %></h1>
+        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
     </div>
     
     <div class="card shadow mb-4">
@@ -92,7 +91,7 @@
                         <span class="text">Open Work Orders</span>
                     </a>
                 <div class="my-2"></div>
-                    <a href="items.jsp" class="btn btn-info btn-icon-split btn-lg">
+                    <a href="inventory.jsp" class="btn btn-info btn-icon-split btn-lg">
                         <span class="icon text-white-50">
                             <i class="fas fa-search"></i>
                         </span>

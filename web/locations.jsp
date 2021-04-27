@@ -21,7 +21,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Location Search</h6>
             <br />
             <div class="row">
-                <form action="GetItems" class="form-group input-group" method="post">
+                <form action="Locations" class="form-group input-group" method="post">
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                     </div>

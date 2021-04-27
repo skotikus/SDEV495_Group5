@@ -24,7 +24,7 @@ public class Database {
     public static Connection getConnection(){
         Connection conn = null;
         String server = "jdbc:mysql://datacron.ableit.local:3306";
-        String database = "GRP5_PRD";
+        String database = "GRP5_scott";
         String username = "grp5_dbsa";
         String password = "Grp5iveRul3z!!";
         try { 

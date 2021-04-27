@@ -35,6 +35,10 @@
                         <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                     </div>
                     <input name="itemLOC" class="form-control" placeholder="Location" type="text">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                    </div>
+                    <input name="itemColor" class="form-control" placeholder="Color" type="text">
                     <button action="Items" type="submit" class="btn btn-primary">Search</button>
                 </form><!-- form-group// -->
             </div>

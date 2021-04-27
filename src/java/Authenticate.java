@@ -91,6 +91,7 @@ public class Authenticate extends HttpServlet {
             session = request.getSession(true);
             session.setAttribute("UserName", username);         
             session.setAttribute("UserID", user_id);
+            session.setAttribute("Role", getRole(user_id));
 
             // Send to the Home JSP page              
             
@@ -125,14 +126,12 @@ public class Authenticate extends HttpServlet {
             conn = Database.getConnection();
             Statement stmt = conn.createStatement();
             String sql = "select user_id from users where username = '" + this.username + "'";
-            System.out.println("username is: " + this.username + ", and user_id = " + user_id);
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 user_id = rs.getInt(1);
             }
-            System.out.println("username is: " + this.username + ", and user_id = " + user_id);
             if (user_id > 0) {                
-                String sql2 = "select user_id from user_info where user_id = " + user_id + " and password = '" + this.pword + "'";
+                String sql2 = "select user_id from user_info where user_id = " + user_id + " and password COLLATE utf8_bin = '" + this.pword + "'";
                 ResultSet rs2 = stmt.executeQuery(sql2);
                 while (rs2.next()) {
                     hitcnt++;
@@ -147,6 +146,26 @@ public class Authenticate extends HttpServlet {
             System.out.println(e);
         }
         return status;
+    }
+    
+    public int getRole(Integer userID){
+        
+        int role = 0;
+        Connection conn;
+        try {
+            conn = Database.getConnection();
+            Statement stmt = conn.createStatement();
+            String sql = "select role_id from user_roles where user_id = " + userID;
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                role = rs.getInt(1);
+            }           
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+        return role;
     }
 
 }
