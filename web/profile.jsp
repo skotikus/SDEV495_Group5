@@ -36,7 +36,8 @@
                                     </div>
                                 </div>
                                 <div class="userData ml-3">
-                                    <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold">Scott Forsyth</h2>
+                                    <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold"><%=session.getAttribute("UserName")%></h2>
+                             
                                 </div>
                             </div>
                         </div>
@@ -132,7 +133,7 @@
 									<option selected=""> Select job type</option>
 									<option>Designer</option>
 									<option>Manager</option>
-									<option>Accaunting</option>
+									<option>Accounting</option>
 								</select>
 							</div> <!-- form-group end.// -->
 							<div class="form-group input-group">
