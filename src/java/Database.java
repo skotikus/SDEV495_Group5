@@ -23,10 +23,10 @@ public class Database {
     
     public static Connection getConnection(){
         Connection conn = null;
-        String server = "";
-        String database = "";
-        String username = "";
-        String password = "";
+        String server = "jdbc:mysql://datacron.ableit.local:3306";
+        String database = "GRP5_scott";
+        String username = "scott_db";
+        String password = "vB1/LM1!@4";
         try { 
             conn = DriverManager.getConnection(server + "/" + database,username,password);
         } catch (Exception ex) {
