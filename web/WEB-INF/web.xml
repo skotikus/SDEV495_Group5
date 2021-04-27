@@ -26,6 +26,10 @@
         <servlet-class>Items</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>Orders</servlet-name>
+        <servlet-class>Orders</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>Users</servlet-name>
         <servlet-class>Users</servlet-class>
     </servlet>
@@ -52,6 +56,10 @@
     <servlet-mapping>
         <servlet-name>Users</servlet-name>
         <url-pattern>/Users</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Orders</servlet-name>
+        <url-pattern>/Orders</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
