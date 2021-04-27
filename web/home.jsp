@@ -92,7 +92,7 @@
                         <span class="text">Open Work Orders</span>
                     </a>
                 <div class="my-2"></div>
-                    <a href="items.jsp" class="btn btn-info btn-icon-split btn-lg">
+                    <a href="inventory.jsp" class="btn btn-info btn-icon-split btn-lg">
                         <span class="icon text-white-50">
                             <i class="fas fa-search"></i>
                         </span>
