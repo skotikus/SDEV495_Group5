@@ -7,8 +7,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -102,13 +104,13 @@ public class Orders extends HttpServlet {
             String sqlOrderQuery = "select work_id, from work_orders;";
 
             //If the work ID field has something in it, add that to the query
-            if(this.work_id != null !this.work_id.trim().isEmpty()){
-                sqlOrderQuery + " WHERE work_id " + this.work_id;
+            if(this.work_id != null | !this.work_id.trim().isEmpty()){
+                sqlOrderQuery += " WHERE work_id " + this.work_id;
             }
-        }
+  
 
         //run the query and get the results
-        ResultSet rs = stmt.executeQuery(sqlOrderQuery)
+        ResultSet rs = stmt.executeQuery(sqlOrderQuery);
 
             //formatting the top of the table
             finalOut = "<table class=\"table table-bordered\" id=\"dataTable\" width=\"100%\" cellspacing=\"0\">\n" +
@@ -150,9 +152,9 @@ public class Orders extends HttpServlet {
         String finalOut = "DEGBUG";
         Connection conn = null;
         
-        final String SQL_LAST_WORK_ID_QUERY = 
+        String sqlOrderQuery = 
             "SELECT work_id FROM work_orders ORDER BY work_id DESC limit 1;";
-        int lastWorkID = null;
+        int lastWorkID;
         
         
 
@@ -166,11 +168,11 @@ public class Orders extends HttpServlet {
         } catch (Exception e) {
             System.out.println(e);
         }
-
+        return "DEBUG";
 
     }
 
-    public String deleteOrder() {
+    public String deleteOrder() throws SQLException {
 
         String finalOut = "DEGBUG";
         Connection conn = null;
@@ -178,17 +180,18 @@ public class Orders extends HttpServlet {
 
         try{
             
-            String sqlDeleteQuery = "delete from work_id"
+            String sqlDeleteQuery = "delete from work_id";
         
     
         } catch (Exception e) {
             System.out.println(e);
         }
 
-
+        return "DEBUG";
     }
 
-    public String updateOrder() {
+    public String updateOrder() throws SQLException  
+    {
 
         String finalOut = "DEGBUG";
         Connection conn = null;
@@ -201,7 +204,7 @@ public class Orders extends HttpServlet {
             System.out.println(e);
         }
 
-
+        return "DEBUG";
     }
 
 
