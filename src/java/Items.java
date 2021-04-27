@@ -14,6 +14,8 @@ import javax.servlet.http.HttpSession;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.RequestDispatcher;
 
 /**
@@ -74,12 +76,20 @@ public class Items extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //processRequest(request, response);
+        
         String action = request.getParameter("action");
         String itemNum = request.getParameter("item");
         if("getItem".equals(action)){
-            getItem(itemNum);
+            List<String> itemProperties = getItem(itemNum);
+            request.setAttribute("itemSKU", itemProperties.get(0));
+            request.setAttribute("itemName", itemProperties.get(1));
+            request.setAttribute("itemQTY", itemProperties.get(2));
+            request.setAttribute("itemLoc", itemProperties.get(3));
+            request.setAttribute("itemColor", itemProperties.get(4));
         }
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("item.jsp");
+        dispatcher.forward(request, response);
     }
 
     /**
@@ -100,9 +110,8 @@ public class Items extends HttpServlet {
         this.qty = request.getParameter("itemQTY");
         this.color = request.getParameter("itemColor");
         
-        try{
-            session = request.getSession(true);
-            session.setAttribute("itemTable", listItems());
+        try{            
+            request.setAttribute("itemTable", listItems());
             
             RequestDispatcher dispatcher = request.getRequestDispatcher("inventory.jsp");
             dispatcher.forward(request, response);
@@ -193,7 +202,7 @@ public class Items extends HttpServlet {
 "                                       <tbody>";
             
             while (rs.next()) {
-                finalOut += "<tr onclick=\"window.location='item.jsp?item=" + rs.getString(1) + "&action=getItem'\">\n" +
+                finalOut += "<tr onclick=\"window.location='Items?item=" + rs.getString(1) + "&action=getItem'\">\n" +
 "                               <td>" + rs.getString(1) + "</td>\n" +
 "                               <td>" + rs.getString(2) + "</td>\n" +
 "                               <td>" + rs.getString(3) + "</td>\n" +
@@ -213,9 +222,9 @@ public class Items extends HttpServlet {
         return finalOut;
     }
     
-    public void getItem(String itemID){        
+    public List<String> getItem(String itemID){        
         
-                
+        List<String> itemInfo = new ArrayList<String>();        
         Connection conn = null;
         try {
             conn = Database.getConnection();
@@ -225,17 +234,18 @@ public class Items extends HttpServlet {
             ResultSet rs = stmt.executeQuery(sql);
             
             while (rs.next()) {
-                session.setAttribute("itemSKU", Integer.parseInt(rs.getString(1)));
-                session.setAttribute("itemName", Integer.parseInt(rs.getString(2)));
-                session.setAttribute("itemQTY", Integer.parseInt(rs.getString(3)));
-                session.setAttribute("itemLoc", Integer.parseInt(rs.getString(4)));
-                session.setAttribute("itemColor", Integer.parseInt(rs.getString(5)));
+                
+                itemInfo.add(rs.getString(1));
+                itemInfo.add(rs.getString(2));
+                itemInfo.add(rs.getString(3));
+                itemInfo.add(rs.getString(4));
+                itemInfo.add(rs.getString(5));
             }
-            
-            System.out.println(session);
+           
             conn.close();
         } catch (Exception e) {
             System.out.println(e);
         }
+        return itemInfo;
     }
 }

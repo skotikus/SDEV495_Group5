@@ -12,6 +12,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%@include file="WEB-INF/includes/head.jspf" %>
+<c:out value="${Items }"></c:out>
 <!-- Begin Page Content -->
 <div class="container-fluid">    
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -23,41 +24,40 @@
             <br />
             <div class="row">
                 <div class="col-8">
-                    <form>
+                    <form action="">
                         <div class="form-group row">
                             <label for="itemSKU" class="col-4 col-form-label">Item SKU</label> 
                             <div class="col-8">
-                                <input id="itemSKU" name="Item SKU" placeholder="<%= (String) session.getAttribute("itemSKU")%>" class="form-control here" required="required" type="text">
+                                <input id="itemSKU" name="Item SKU" value="${itemSKU}" class="form-control here" required="required" type="text">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="itemName" class="col-4 col-form-label">Item Name</label> 
                             <div class="col-8">
-                                <input id="itemName" name="itemName" placeholder="<%= (String) session.getAttribute("itemName")%>" class="form-control here" type="text">
+                                <input id="itemName" name="itemName" value="${itemName}" class="form-control here" type="text">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="itemQTY" class="col-4 col-form-label">Quantity</label> 
                             <div class="col-8">
-                                <input id="itemQTY" name="itemQTY" placeholder="<%= (String) session.getAttribute("itemQTY")%>" class="form-control here" type="text">
+                                <input id="itemQTY" name="itemQTY" value="${itemQTY}" class="form-control here" type="text">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="itemLOC" class="col-4 col-form-label">Item Location</label> 
                             <div class="col-8">
-                                <input id="itemLOC" name="itemLOC" placeholder="<%= (String) session.getAttribute("itemLoc")%>" class="form-control here" type="text">
+                                <input id="itemLOC" name="itemLOC" value="${itemLoc}" class="form-control here" type="text">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="itemColor" class="col-4 col-form-label">Item Color</label> 
                             <div class="col-8">
-                                <input id="itemColor" name="itemColor" placeholder="<%= (String) session.getAttribute("itemColor")%>" class="form-control here" type="text">
+                                <input id="itemColor" name="itemColor" value="${itemLoc}" class="form-control here" type="text">
                             </div>
                         </div>
                         
                         <%
                             Integer permLvl = (Integer) session.getAttribute("Role");
-                            System.out.println(permLvl);
                             if(permLvl >= 2){
                                 
                         %>

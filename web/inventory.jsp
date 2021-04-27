@@ -44,13 +44,7 @@
             </div>
 		<div class="card-body">
 			<div class="table-responsive" id="itemTable">
-				<% 
-                                    String itemTableVar = "No Search Results";
-                                    if(session.getAttribute("itemTable") != null){
-                                        itemTableVar = (String) session.getAttribute("itemTable");
-                                    }
-                                %>
-                                <%= itemTableVar%>
+				${itemTable}
 			</div>
 		</div>
 	</div>
