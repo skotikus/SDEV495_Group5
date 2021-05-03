@@ -4,12 +4,21 @@
  * and open the template in the editor.
  */
 
+import com.sun.webkit.dom.StyleSheetImpl;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -17,6 +26,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class Users extends HttpServlet {
 
+    private HttpSession session;
+    private String passF;
+    private String confPassf;
+    
+       
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -55,7 +69,25 @@ public class Users extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
+        session = request.getSession(false);
+        if(session.getAttribute("UserName") == null){
+            request.getRequestDispatcher("/index.jsp").forward(request,response);
+        }
+
+        //String action = request.getParameter("action");
+        //if("profile".equals(action)){
+            Integer userID = (Integer) session.getAttribute("UserID");
+            List<String> userProperties = getProfile(userID);
+            request.setAttribute("userID", userProperties.get(0));
+            request.setAttribute("userName", userProperties.get(1));
+            request.setAttribute("firstName", userProperties.get(2));
+            request.setAttribute("lastName", userProperties.get(3));
+            request.setAttribute("userEmail", userProperties.get(4));
+
+            RequestDispatcher dispatcher = request.getRequestDispatcher("profile.jsp");
+            dispatcher.forward(request, response);
+        //}
     }
 
     /**
@@ -69,7 +101,22 @@ public class Users extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
+        session = request.getSession(false);
+        Integer userID = (Integer) session.getAttribute("UserID");
+        this.passF = request.getParameter("newpass");
+        this.confPassf = request.getParameter("newpassconf");
+        if(request.getParameter("update") != null){ 
+            if(this.passF != null && !this.passF.trim().isEmpty() && this.confPassf != null && !this.confPassf.trim().isEmpty()){
+                if(passF.equals(confPassf)){
+                    updatePassword(userID);
+                }
+            }else{
+                request.setAttribute("ErrorMessage", "Must fill out both password fields to change password.");
+            }
+        }
+        RequestDispatcher dispatcher = request.getRequestDispatcher("profile.jsp");
+        dispatcher.forward(request, response);
     }
 
     /**
@@ -81,5 +128,54 @@ public class Users extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+    
+    
+    public List<String> getProfile(Integer userID){
+    List<String> userInfo = new ArrayList<String>();        
+        Connection conn = null;
+        
+        try {
+            conn = Database.getConnection();
+            Statement stmt = conn.createStatement();
+            String sql = "select user_id, username, firstname, lastname, email from users WHERE user_id = " + userID;
+            
+            ResultSet rs = stmt.executeQuery(sql);
+            
+            while (rs.next()) {
+                
+                userInfo.add(rs.getString(1)); //user_ID
+                userInfo.add(rs.getString(2)); //username
+                userInfo.add(rs.getString(3)); //firstname
+                userInfo.add(rs.getString(4)); //lastname 
+                userInfo.add(rs.getString(5)); //email
+            }
+           
+            conn.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return userInfo;
+    
+    
+    }
+    
+    public void updatePassword(Integer userID){
+        Connection conn = null;
+        try {
+            conn = Database.getConnection();
+            Statement stmt = conn.createStatement();
+            String sql = "UPDATE user_info SET  password = '" + this.passF + "'";
+            sql += " WHERE user_id = " + userID;
+            
+            
+            //System.out.println(sql);  //For debugging
+            stmt.executeUpdate(sql);
+            conn.close();
+            
+        }catch(Exception ex){
+            System.out.println(ex);
+        }
+    }
+
 
 }

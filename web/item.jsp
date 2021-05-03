@@ -14,19 +14,20 @@
 <!-- Begin Page Content -->
 <div class="container-fluid">    
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Item <%= request.getParameter("item") %> Details</h1>
+        <h1 class="h3 mb-0 text-gray-800">Item ${item} Details</h1>
     </div>
+     
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Item Details</h6>
             <br />
             <div class="row">
                 <div class="col-8">
-                    <form action="">
+                    <form action="Items" method="post">
                         <div class="form-group row">
                             <label for="itemSKU" class="col-4 col-form-label">Item SKU</label> 
                             <div class="col-8">
-                                <input id="itemSKU" name="Item SKU" value="${itemSKU}" class="form-control here" required="required" type="text">
+                                <input id="itemSKU" name="itemSKU" value="${itemSKU}" class="form-control here" readonly type="text">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -50,19 +51,17 @@
                         <div class="form-group row">
                             <label for="itemColor" class="col-4 col-form-label">Item Color</label> 
                             <div class="col-8">
-                                <input id="itemColor" name="itemColor" value="${itemLoc}" class="form-control here" type="text">
+                                <input id="itemColor" name="itemColor" value="${itemColor}" class="form-control here" type="text">
                             </div>
                         </div>
-                        
                         <%
                             Integer permLvl = (Integer) session.getAttribute("Role");
                             if(permLvl >= 2){
                                 
                         %>
-                        
                         <div class="form-group row">
                             <div class="offset-4 col-8">
-                                <button name="submit" type="submit" class="btn btn-primary">Update Item</button>
+                                <button name="update" type="submit" class="btn btn-primary">Update Item</button>
                             </div>
                         </div>
                         

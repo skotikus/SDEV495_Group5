@@ -164,7 +164,7 @@ form{
 						</form>
                                                 <%
                                                     } else {
-                                                        request.setAttribute("ErrorMessage", "You are already logged in.");
+                                                        request.setAttribute("ErrorMessage", "");
                                                         RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
                                                         dispatcher.forward(request, response);                    
                                                     }

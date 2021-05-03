@@ -21,7 +21,7 @@
             <h6 class="m-0 font-weight-bold text-primary">User Search</h6>
             <br />
             <div class="row">
-                <form action="GetItems" class="form-group input-group" method="post">
+                <form action="Users" class="form-group input-group" method="post">
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                     </div>
@@ -37,7 +37,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Users</h6>
             <br />
             <div class="row">
-                <p> for each user returned from search, display card as link to their profile </p>
+                <p>Stuff here<p>
             </div>
         </div>
     </div>

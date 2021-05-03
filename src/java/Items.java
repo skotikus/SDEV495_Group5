@@ -10,7 +10,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -81,6 +80,7 @@ public class Items extends HttpServlet {
         if("getItem".equals(action)){
             List<String> itemProperties = getItem(itemNum);
             request.setAttribute("itemSKU", itemProperties.get(0));
+            request.setAttribute("item", itemProperties.get(0));
             request.setAttribute("itemName", itemProperties.get(1));
             request.setAttribute("itemQTY", itemProperties.get(2));
             request.setAttribute("itemLoc", itemProperties.get(3));
@@ -102,24 +102,40 @@ public class Items extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Get the post input 
-        this.sku = request.getParameter("itemSKU");
-        this.location = request.getParameter("itemLOC");
-        this.name = request.getParameter("itemName");
-        this.qty = request.getParameter("itemQTY");
-        this.color = request.getParameter("itemColor");
+            // Get the post input    
+            this.sku = request.getParameter("itemSKU");
+            this.location = request.getParameter("itemLOC");
+            this.name = request.getParameter("itemName");
+            this.qty = request.getParameter("itemQTY");
+            this.color = request.getParameter("itemColor");
         
-        try{            
-            request.setAttribute("itemTable", listItems());
-            
-            RequestDispatcher dispatcher = request.getRequestDispatcher("inventory.jsp");
-            dispatcher.forward(request, response);
+        if (request.getParameter("getItems") != null) {  
+            try{            
+                request.setAttribute("itemTable", listItems());
+                request.setAttribute("item", this.sku);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("inventory.jsp");
+                dispatcher.forward(request, response);
 
-        } catch (Exception e) {
-            System.out.println(e);
-        } finally {
-                //conn.close();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
+        else if (request.getParameter("update") != null) {
+            updateItem();
+            request.setAttribute("item", this.sku);
+            
+            List<String> itemProperties = getItem(this.sku);
+            request.setAttribute("itemSKU", itemProperties.get(0));
+            request.setAttribute("itemName", itemProperties.get(1));
+            request.setAttribute("itemQTY", itemProperties.get(2));
+            request.setAttribute("itemLoc", itemProperties.get(3));
+            request.setAttribute("itemColor", itemProperties.get(4));
+            
+            RequestDispatcher dispatcher = request.getRequestDispatcher("item.jsp");
+            dispatcher.forward(request, response);
+            
+        }
+        
     }
 
     /**
@@ -246,5 +262,44 @@ public class Items extends HttpServlet {
             System.out.println(e);
         }
         return itemInfo;
+    }
+    
+    
+    public void updateItem(){
+        
+        Connection conn = null;
+        try {
+            conn = Database.getConnection();
+            Statement stmt = conn.createStatement();
+            String sql = "UPDATE items SET ";
+                        
+            if(this.location != null && !this.location.trim().isEmpty()){
+                sql += "item_loc = " + this.location;
+            }
+            
+            if(this.name != null && !this.name.trim().isEmpty()){
+                sql += ", ";
+                sql += "item_name = '" + this.name + "'";
+            }
+            
+            if(this.qty != null && !this.qty.trim().isEmpty()){
+                sql += ", ";
+                sql += "item_qty = " + this.qty;
+            }
+            if(this.color != null && !this.color.trim().isEmpty()){
+                sql += ", ";
+                sql += "item_color = '" + this.color + "'";
+            }  
+            
+            sql += " WHERE item_id = " + this.sku + ";";
+            
+            
+            //System.out.println(sql);  //For debugging
+            stmt.executeUpdate(sql);
+            conn.close();
+            
+        }catch(Exception ex){
+            System.out.println(ex);
+        }
     }
 }

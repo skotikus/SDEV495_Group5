@@ -12,8 +12,7 @@
 <!DOCTYPE html>
 <%@include file="WEB-INF/includes/head.jspf" %>
 <!-- Begin Page Content -->
-<div class="container-fluid">    
-<!-- DataTales Example -->
+<div class="container-fluid">
 	<div class="card shadow mb-4">
             <div class="card-header py-3">
 		<h6 class="m-0 font-weight-bold text-primary">Search Items</h6>
@@ -39,7 +38,7 @@
                         <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                     </div>
                     <input name="itemColor" class="form-control" placeholder="Color" type="text">
-                    <button action="Items" type="submit" class="btn btn-primary">Search</button>
+                    <button action="Items" name="getItems" type="submit" class="btn btn-primary">Search</button>
                 </form><!-- form-group// -->
             </div>
 		<div class="card-body">
