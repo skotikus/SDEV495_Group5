@@ -92,10 +92,11 @@ public class Authenticate extends HttpServlet {
             session.setAttribute("UserName", username);         
             session.setAttribute("UserID", user_id);
             session.setAttribute("Role", getRole(user_id));
+            session.setAttribute("Location", getLocation(user_id));
 
             // Send to the Home JSP page              
             
-            RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("Dashboard");
             dispatcher.forward(request, response);
 
         } else {
@@ -159,13 +160,29 @@ public class Authenticate extends HttpServlet {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 role = rs.getInt(1);
-            }           
-
+            }
         } catch (Exception e) {
             System.out.println(e);
         }
-        
         return role;
+    }
+    
+    public int getLocation(Integer userID){
+        
+        int loc = 0;
+        Connection conn;
+        try {
+            conn = Database.getConnection();
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT location from user_roles WHERE user_id = " + userID;
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                loc = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return loc;
     }
 
 }

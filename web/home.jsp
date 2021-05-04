@@ -31,7 +31,7 @@
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                         Items @ Location</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">15680</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">${locItems}</div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="far fa-list-alt fa-2x text-gray-300"></i>
@@ -48,8 +48,8 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                        Items Pending</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">575</div>
+                                        Orders Pending</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">${openOrders}</div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-hourglass-half fa-2x text-gray-300"></i>
@@ -66,8 +66,8 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                        Pending Work Orders</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                        My Work Orders</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">${myOrders}</div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-chevron-circle-right fa-2x text-gray-300"></i>
