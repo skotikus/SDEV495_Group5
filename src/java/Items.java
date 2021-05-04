@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +75,6 @@ public class Items extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         String action = request.getParameter("action");
         String itemNum = request.getParameter("item");
         if("getItem".equals(action)){
@@ -121,7 +121,7 @@ public class Items extends HttpServlet {
             }
         }
         else if (request.getParameter("update") != null) {
-            updateItem();
+            
             request.setAttribute("item", this.sku);
             
             List<String> itemProperties = getItem(this.sku);
@@ -131,26 +131,28 @@ public class Items extends HttpServlet {
             request.setAttribute("itemLoc", itemProperties.get(3));
             request.setAttribute("itemColor", itemProperties.get(4));
             
+            request.setAttribute("completed", updateItem());
+            
             RequestDispatcher dispatcher = request.getRequestDispatcher("item.jsp");
             dispatcher.forward(request, response);
             
         }        
         else if (request.getParameter("delete") != null) {
-            deleteItem();
+            request.setAttribute("completed", deleteItem());
                         
             RequestDispatcher dispatcher = request.getRequestDispatcher("inventory.jsp");
             dispatcher.forward(request, response);
             
         }
         else if (request.getParameter("create") != null) {
-            newItem();
+            request.setAttribute("completed", newItem());
             
             List<String> itemProperties = getItem(this.sku);
             request.setAttribute("itemSKU", itemProperties.get(0));
             request.setAttribute("itemName", itemProperties.get(1));
             request.setAttribute("itemQTY", itemProperties.get(2));
             request.setAttribute("itemLoc", itemProperties.get(3));
-            request.setAttribute("itemColor", itemProperties.get(4));     
+            request.setAttribute("itemColor", itemProperties.get(4));
             
             RequestDispatcher dispatcher = request.getRequestDispatcher("item.jsp");
             dispatcher.forward(request, response);
@@ -285,22 +287,24 @@ public class Items extends HttpServlet {
         return itemInfo;
     }
     
-    public void deleteItem(){
+    public String deleteItem(){
+        String works = "error";
         Connection conn = null;
         try {
             conn = Database.getConnection();
             Statement stmt = conn.createStatement();
             String sql = "DELETE FROM items WHERE item_id = " + this.sku;
-            System.out.println(sql);  //For debugging
             stmt.executeUpdate(sql);
             conn.close();
-            
+            works = "deleted";
         }catch(Exception ex){
             System.out.println(ex);
         }
+        return works;
     }
     
-    public void newItem(){
+    public String newItem(){
+        String works = "error";
         Connection conn = null;
         try {
             conn = Database.getConnection();
@@ -313,17 +317,18 @@ public class Items extends HttpServlet {
                 sql += this.location + ", ";
                 sql += "'" + this.color + "')";
                         
-            System.out.println(sql);  //For debugging
+            //System.out.println(sql);  //For debugging
             stmt.executeUpdate(sql);
+            works = "created";
             conn.close();
-            
         }catch(Exception ex){
             System.out.println(ex);
         }
+        return works;
     }
     
-    public void updateItem(){
-        
+    public String updateItem(){
+        String works = "error";
         Connection conn = null;
         try {
             conn = Database.getConnection();
@@ -353,10 +358,11 @@ public class Items extends HttpServlet {
             
             //System.out.println(sql);  //For debugging
             stmt.executeUpdate(sql);
+            works = "updated";
             conn.close();
-            
         }catch(Exception ex){
             System.out.println(ex);
         }
+        return works;
     }
 }

@@ -28,6 +28,8 @@ public class Locations extends HttpServlet {
     private String zip;
     private String name;
     private String street;
+    private String state;
+    private String cap;
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -78,6 +80,8 @@ public class Locations extends HttpServlet {
             request.setAttribute("locStreet", itemProperties.get(2));
             request.setAttribute("locCity", itemProperties.get(3));
             request.setAttribute("locZip", itemProperties.get(4));
+            request.setAttribute("locState", itemProperties.get(5));
+            request.setAttribute("locCap", itemProperties.get(6));
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("location.jsp");
@@ -101,6 +105,8 @@ public class Locations extends HttpServlet {
         this.name = request.getParameter("locName");
         this.zip = request.getParameter("locZip");
         this.street = request.getParameter("locStreet");
+        this.state = request.getParameter("locState");
+        this.cap = request.getParameter("locCap");
         
         if (request.getParameter("getLocs") != null) {  
             try{            
@@ -114,7 +120,7 @@ public class Locations extends HttpServlet {
             }
         }
         else if (request.getParameter("update") != null) {
-            updateLoc();
+            request.setAttribute("completed", updateLoc());
             
             List<String> itemProperties = getLoc(this.ID);
             request.setAttribute("locID", itemProperties.get(0));
@@ -123,10 +129,34 @@ public class Locations extends HttpServlet {
             request.setAttribute("locStreet", itemProperties.get(2));
             request.setAttribute("locCity", itemProperties.get(3));
             request.setAttribute("locZip", itemProperties.get(4));
+            request.setAttribute("locState", itemProperties.get(5));
+            request.setAttribute("locCap", itemProperties.get(6));
             
             RequestDispatcher dispatcher = request.getRequestDispatcher("location.jsp");
             dispatcher.forward(request, response);
+        }
+        else if (request.getParameter("delete") != null) {
+            request.setAttribute("completed", deleteLoc());
+                        
+            RequestDispatcher dispatcher = request.getRequestDispatcher("locations.jsp");
+            dispatcher.forward(request, response);
             
+        }
+        else if (request.getParameter("create") != null) {
+            request.setAttribute("completed", newLoc());
+            
+            List<String> itemProperties = getLoc(this.ID);
+            request.setAttribute("locID", itemProperties.get(0));
+            request.setAttribute("loc", itemProperties.get(0));
+            request.setAttribute("locName", itemProperties.get(1));
+            request.setAttribute("locStreet", itemProperties.get(2));
+            request.setAttribute("locCity", itemProperties.get(3));
+            request.setAttribute("locZip", itemProperties.get(4));
+            request.setAttribute("locState", itemProperties.get(5));
+            request.setAttribute("locCap", itemProperties.get(6));
+            
+            RequestDispatcher dispatcher = request.getRequestDispatcher("location.jsp");
+            dispatcher.forward(request, response);
         }
     }
 
@@ -236,7 +266,7 @@ public class Locations extends HttpServlet {
         try {
             conn = Database.getConnection();
             Statement stmt = conn.createStatement();
-            String sql = "SELECT loc_id ,loc_name, loc_street, loc_city, loc_zip FROM locations WHERE loc_id = " + locID;
+            String sql = "SELECT loc_id ,loc_name, loc_street, loc_city, loc_zip, loc_state, loc_cap FROM locations WHERE loc_id = " + locID;
             
             ResultSet rs = stmt.executeQuery(sql);
             
@@ -247,6 +277,8 @@ public class Locations extends HttpServlet {
                 locInfo.add(rs.getString(3));
                 locInfo.add(rs.getString(4));
                 locInfo.add(rs.getString(5));
+                locInfo.add(rs.getString(6));
+                locInfo.add(rs.getString(7));
             }
            
             conn.close();
@@ -256,8 +288,8 @@ public class Locations extends HttpServlet {
         return locInfo;
     }
     
-    public void updateLoc(){
-        
+    public String updateLoc(){
+        String works = "error";
         Connection conn = null;
         try {
             conn = Database.getConnection();
@@ -288,9 +320,53 @@ public class Locations extends HttpServlet {
             //System.out.println(sql);  //For debugging
             stmt.executeUpdate(sql);
             conn.close();
-            
+            works = "updated";
         }catch(Exception ex){
             System.out.println(ex);
         }
+        return works;
+    }
+    
+    public String deleteLoc(){
+        String works = "error";
+        Connection conn = null;
+        try {
+            conn = Database.getConnection();
+            Statement stmt = conn.createStatement();
+            String sql = "DELETE FROM locations WHERE loc_id = " + this.ID + " AND (SELECT COUNT(item_id) FROM items WHERE item_loc = " + this.ID + ") = 0";
+            stmt.executeUpdate(sql);
+            
+            conn.close();
+            works = "deleted";
+        }catch(Exception ex){
+            System.out.println(ex);
+        }
+        return works;
+    }
+    
+    public String newLoc(){
+        String works = "error";
+        Connection conn = null;
+        try {
+            conn = Database.getConnection();
+            Statement stmt = conn.createStatement();
+            String sql = "INSERT INTO locations (loc_id, loc_name, loc_street, loc_city, loc_state, loc_zip, loc_cap) Values (";
+            
+                sql += this.ID + ", ";
+                sql += "'" + this.name + "', ";
+                sql += "'" + this.street + "', ";
+                sql += "'" + this.city + "', ";
+                sql += "'" + this.state + "', ";
+                sql += this.zip + ", ";
+                sql += this.cap + ")";
+                        
+            //System.out.println(sql);  //For debugging
+            stmt.executeUpdate(sql);
+            works = "created";
+            conn.close();
+        }catch(Exception ex){
+            System.out.println(ex);
+        }
+        return works;
     }
 }
