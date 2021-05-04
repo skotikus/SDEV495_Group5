@@ -11,6 +11,36 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%@include file="WEB-INF/includes/head.jspf" %>
+
+<%
+    String result = (String) request.getAttribute("completed");
+    if("updated".equals(result) || "created".equals(result)){      
+%>
+
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong>Success!</strong> Your item has been ${completed}.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<% 
+    }
+else if("error".equals(result)){
+%>
+
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  <strong>ERROR:</strong> Action was not processed.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<% 
+    }
+%>
+
+
 <!-- Begin Page Content -->
 <div class="container-fluid">    
     <div class="d-sm-flex align-items-center justify-content-between mb-4">

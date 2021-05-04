@@ -11,6 +11,34 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%@include file="WEB-INF/includes/head.jspf" %>
+
+<%
+    String result = (String) request.getAttribute("completed");
+    if("deleted".equals(result)){      
+%>
+
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong>Success!</strong> The location has been ${completed}.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<% 
+    }
+else if("error".equals(result)){
+%>
+
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  <strong>ERROR:</strong> Action was not processed.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<% 
+    }
+%>
 <!-- Begin Page Content -->
 <div class="container-fluid">    
     <div class="card shadow mb-4">
@@ -47,6 +75,19 @@
                 </div>
             </div>
 	</div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <%
+                //check permission to display admin level page items
+                Integer permLvl = (Integer) session.getAttribute("Role");
+                if(permLvl >= 2){
+            %>
+            <div class="form-group row">
+                <a class="btn btn-primary" href="location.jsp?action=new" role="button">Create New Location</a>
+            </div>
+            <% } %>
+        </div>
     </div>
 </div>
 <%@include file="WEB-INF/includes/footer.jspf" %>
