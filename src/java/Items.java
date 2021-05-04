@@ -79,8 +79,8 @@ public class Items extends HttpServlet {
         String itemNum = request.getParameter("item");
         if("getItem".equals(action)){
             List<String> itemProperties = getItem(itemNum);
-            request.setAttribute("itemSKU", itemProperties.get(0));
             request.setAttribute("item", itemProperties.get(0));
+            request.setAttribute("itemSKU", itemProperties.get(0));
             request.setAttribute("itemName", itemProperties.get(1));
             request.setAttribute("itemQTY", itemProperties.get(2));
             request.setAttribute("itemLoc", itemProperties.get(3));
@@ -130,6 +130,27 @@ public class Items extends HttpServlet {
             request.setAttribute("itemQTY", itemProperties.get(2));
             request.setAttribute("itemLoc", itemProperties.get(3));
             request.setAttribute("itemColor", itemProperties.get(4));
+            
+            RequestDispatcher dispatcher = request.getRequestDispatcher("item.jsp");
+            dispatcher.forward(request, response);
+            
+        }        
+        else if (request.getParameter("delete") != null) {
+            deleteItem();
+                        
+            RequestDispatcher dispatcher = request.getRequestDispatcher("inventory.jsp");
+            dispatcher.forward(request, response);
+            
+        }
+        else if (request.getParameter("create") != null) {
+            newItem();
+            
+            List<String> itemProperties = getItem(this.sku);
+            request.setAttribute("itemSKU", itemProperties.get(0));
+            request.setAttribute("itemName", itemProperties.get(1));
+            request.setAttribute("itemQTY", itemProperties.get(2));
+            request.setAttribute("itemLoc", itemProperties.get(3));
+            request.setAttribute("itemColor", itemProperties.get(4));     
             
             RequestDispatcher dispatcher = request.getRequestDispatcher("item.jsp");
             dispatcher.forward(request, response);
@@ -195,7 +216,7 @@ public class Items extends HttpServlet {
             //System.out.println(sql);  //For debugging
             ResultSet rs = stmt.executeQuery(sql);
             
-            finalOut = "<table class=\"table table-bordered table-hover\" id=\"dataTable\" width=\"100%\" cellspacing=\"0\">\n" +
+            finalOut = "<table class=\"table table-bordered table-hover\" id=\"table\" width=\"100%\" cellspacing=\"0\">\n" +
                                         "<thead>\n" +
 "						<tr>\n" +
 "                                                    <th>SKU</th>\n" +
@@ -264,6 +285,42 @@ public class Items extends HttpServlet {
         return itemInfo;
     }
     
+    public void deleteItem(){
+        Connection conn = null;
+        try {
+            conn = Database.getConnection();
+            Statement stmt = conn.createStatement();
+            String sql = "DELETE FROM items WHERE item_id = " + this.sku;
+            System.out.println(sql);  //For debugging
+            stmt.executeUpdate(sql);
+            conn.close();
+            
+        }catch(Exception ex){
+            System.out.println(ex);
+        }
+    }
+    
+    public void newItem(){
+        Connection conn = null;
+        try {
+            conn = Database.getConnection();
+            Statement stmt = conn.createStatement();
+            String sql = "INSERT INTO items (item_Id, item_name, item_qty, item_loc, item_color) Values (";
+            
+                sql += this.sku + ", ";
+                sql += "'" + this.name + "', ";
+                sql += this.qty + ", ";
+                sql += this.location + ", ";
+                sql += "'" + this.color + "')";
+                        
+            System.out.println(sql);  //For debugging
+            stmt.executeUpdate(sql);
+            conn.close();
+            
+        }catch(Exception ex){
+            System.out.println(ex);
+        }
+    }
     
     public void updateItem(){
         

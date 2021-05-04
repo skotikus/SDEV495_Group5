@@ -35,7 +35,7 @@
                                     </div>
                                 </div>
                                 <div class="userData ml-3">
-                                    <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold"><%=session.getAttribute("UserName")%></h2>
+                                    <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold">${firstName} ${lastName}</h2>
                                     <p>User Role ID: <%=session.getAttribute("Role")%></p>
                                 </div>
                             </div>

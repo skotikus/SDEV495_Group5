@@ -26,7 +26,7 @@
                         <div class="form-group row">
                             <label for="orderID" class="col-4 col-form-label">Order #</label> 
                             <div class="col-8">
-                                <input id="orderID" name="orderID" value="${orderID}" class="form-control here" required="required" type="text">
+                                <input id="orderID" name="orderID" value="${orderID}" class="form-control here" readonly required="required" type="text">
                             </div>
                         </div>
                         <div class="form-group row">

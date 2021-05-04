@@ -24,28 +24,38 @@
             <div class="row">
                 <div class="col-8">
                     <form action="Items" method="post">
+                        <%
+                            String action = request.getParameter("action");
+                            Boolean newy = null;
+                            if("new".equals(action)){
+                                newy = true;
+                            }else{
+                                newy = false;
+                            }
+                        %>
+                        
                         <div class="form-group row">
                             <label for="itemSKU" class="col-4 col-form-label">Item SKU</label> 
                             <div class="col-8">
-                                <input id="itemSKU" name="itemSKU" value="${itemSKU}" class="form-control here" readonly type="text">
+                                <input id="itemSKU" name="itemSKU" value="${itemSKU}" class="form-control here" <% if(!newy){ %>readonly<% }else{ %>required<%}%> type="text">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="itemName" class="col-4 col-form-label">Item Name</label> 
                             <div class="col-8">
-                                <input id="itemName" name="itemName" value="${itemName}" class="form-control here" type="text">
+                                <input id="itemName" name="itemName" value="${itemName}" class="form-control here" type="text" <% if(newy){ %>required<%}%>>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="itemQTY" class="col-4 col-form-label">Quantity</label> 
                             <div class="col-8">
-                                <input id="itemQTY" name="itemQTY" value="${itemQTY}" class="form-control here" type="text">
+                                <input id="itemQTY" name="itemQTY" value="${itemQTY}" class="form-control here" type="text" <% if(newy){%>required<%}%>>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="itemLOC" class="col-4 col-form-label">Item Location</label> 
                             <div class="col-8">
-                                <input id="itemLOC" name="itemLOC" value="${itemLoc}" class="form-control here" type="text">
+                                <input id="itemLOC" name="itemLOC" value="${itemLoc}" class="form-control here" type="text" <% if(newy){ %>required<%}%>>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -54,18 +64,28 @@
                                 <input id="itemColor" name="itemColor" value="${itemColor}" class="form-control here" type="text">
                             </div>
                         </div>
-                        <%
-                            Integer permLvl = (Integer) session.getAttribute("Role");
-                            if(permLvl >= 2){
-                                
-                        %>
                         <div class="form-group row">
                             <div class="offset-4 col-8">
+                        <%
+                            //check permission to display admin level page items
+                            Integer permLvl = (Integer) session.getAttribute("Role");
+                            if(permLvl >= 2 && !newy){
+                        %>
+                        
                                 <button name="update" type="submit" class="btn btn-primary">Update Item</button>
+                                <button name="delete" type="submit" class="btn btn-outline-danger">Delete Item</button>                      
+                        <% } else if(permLvl >= 2) { %>
+                            <button name="create" type="submit" class="btn btn-primary">Create Item</button>
+                        <%}else{%>
+                            <button type="button" class="btn btn-primary" onclick="goBack()">Back to Inventory</button>
+                            <script>
+                                function goBack() {
+                                  history.back();
+                                }
+                            </script>
+                        <%}%>
                             </div>
                         </div>
-                        
-                        <% } %>
                         
                     </form>
 		</div>

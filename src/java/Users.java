@@ -115,6 +115,14 @@ public class Users extends HttpServlet {
                 request.setAttribute("ErrorMessage", "Must fill out both password fields to change password.");
             }
         }
+        
+        List<String> userProperties = getProfile(userID);
+        request.setAttribute("userID", userProperties.get(0));
+        request.setAttribute("userName", userProperties.get(1));
+        request.setAttribute("firstName", userProperties.get(2));
+        request.setAttribute("lastName", userProperties.get(3));
+        request.setAttribute("userEmail", userProperties.get(4));
+            
         RequestDispatcher dispatcher = request.getRequestDispatcher("profile.jsp");
         dispatcher.forward(request, response);
     }

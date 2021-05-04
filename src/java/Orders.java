@@ -24,6 +24,9 @@ public class Orders extends HttpServlet {
     private String itemName;
     private String qty;
     private String emp;
+    private String impDate;
+    private String compDate;
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -97,19 +100,42 @@ public class Orders extends HttpServlet {
         this.srcLocation = request.getParameter("srcLocation");
         this.destLocation = request.getParameter("destLocation");
         this.itemName = request.getParameter("itemName");
+        this.impDate = request.getParameter("impDate");
+        this.compDate = request.getParameter("compDate");
         this.qty = request.getParameter("qty");
         this.emp = request.getParameter("emp");
         
-        try{            
-            request.setAttribute("ordersTable", listOrders());
-            
-            RequestDispatcher dispatcher = request.getRequestDispatcher("workorders.jsp");
-            dispatcher.forward(request, response);
+        
+        if (request.getParameter("listOrders") != null) { 
+            try{            
+                request.setAttribute("ordersTable", listOrders());
 
-        } catch (Exception e) {
-            System.out.println(e);
-        } finally {
-                //conn.close();
+                RequestDispatcher dispatcher = request.getRequestDispatcher("workorders.jsp");
+                dispatcher.forward(request, response);
+
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+        else if (request.getParameter("update") != null) {
+            try{
+                updateOrder();
+            }catch(Exception ex){
+                System.out.println(ex);
+            }
+            
+            List<String> itemProperties = getOrder(this.orderID);
+            request.setAttribute("orderID", itemProperties.get(0));
+            request.setAttribute("impDate", itemProperties.get(1));
+            request.setAttribute("compDate", itemProperties.get(2));
+            request.setAttribute("srcLoc", itemProperties.get(3));
+            request.setAttribute("destLoc", itemProperties.get(4));
+            request.setAttribute("itemName", itemProperties.get(5));
+            request.setAttribute("userName", itemProperties.get(6));
+            request.setAttribute("orderQTY", itemProperties.get(7));
+            
+            RequestDispatcher dispatcher = request.getRequestDispatcher("order.jsp");
+            dispatcher.forward(request, response);
         }
     }
 
@@ -184,7 +210,7 @@ public class Orders extends HttpServlet {
             }
             
             sql += " ORDER BY order_id";
-            System.out.println(sql);
+            //System.out.println(sql);
                 
             //run the query and get the results
             ResultSet rs = stmt.executeQuery(sql);
@@ -281,21 +307,54 @@ public class Orders extends HttpServlet {
         return "DEBUG";
     }
 
-    public String updateOrder() throws SQLException  
+    public void updateOrder() throws SQLException  
     {
-
-        String finalOut = "DEGBUG";
         Connection conn = null;
-        Statement stmt = conn.createStatement();
+        try {
+            conn = Database.getConnection();
+            Statement stmt = conn.createStatement();
+            //find out how to translate locations or make drop downs
 
-        try{
-
-    
-        } catch (Exception e) {
-            System.out.println(e);
+            String sql = "UPDATE orders SET ";
+                        
+            if(this.impDate != null && !this.impDate.trim().isEmpty()){
+                sql += "imp_date = '" + this.impDate + "'";
+            }            
+            if(this.compDate != null && !this.compDate.trim().isEmpty()){
+                sql += ", ";
+                sql += "comp_date = '" + this.compDate + "'";
+            }            
+            if(this.srcLocation != null && !this.srcLocation.trim().isEmpty()){
+                sql += ", ";
+                sql += "src_loc = '" + this.srcLocation + "'";
+            }
+            if(this.destLocation != null && !this.destLocation.trim().isEmpty()){
+                sql += ", ";
+                sql += "dest_loc = '" + this.destLocation + "'";
+            }
+            /*if(this.itemID != null && !this.itemID.trim().isEmpty()){
+                sql += ", ";
+                sql += "item_id = " + this.itemID;
+            }*/
+            if(this.qty != null && !this.qty.trim().isEmpty()){
+                sql += ", ";
+                sql += "order_qty = " + this.qty;
+            }
+            /*if(this.userID != null && !this.userID.trim().isEmpty()){
+                sql += ", ";
+                sql += "user_id = " + this.userID;
+            }*/ 
+            
+            sql += " WHERE order_id = " + this.orderID + ";";
+            
+            
+            //System.out.println(sql);  //For debugging
+            stmt.executeUpdate(sql);
+            conn.close();
+            
+        }catch(Exception ex){
+            System.out.println(ex);
         }
-
-        return "DEBUG";
     }
     
     public List<String> getOrder(String orderID){        

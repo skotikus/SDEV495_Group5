@@ -99,7 +99,7 @@
                         <span class="text">Search Items</span>
                     </a>
                 <div class="my-2"></div>
-                    <a href="profile.jsp" class="btn btn-secondary btn-icon-split btn-lg">
+                    <a href="Users" class="btn btn-secondary btn-icon-split btn-lg">
                         <span class="icon text-white-50">
                             <i class="fas fa-user-tie"></i>
                         </span>

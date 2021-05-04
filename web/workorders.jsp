@@ -20,30 +20,26 @@
             <div class="row">
                 <form action="Orders" class="form-group input-group" method="post">
                     <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                        <span class="input-group-text"> <i class="fas fa-hashtag"></i> </span>
                     </div>
                     <input name="orderID" class="form-control" placeholder="Order #" type="text">
                     <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                        <span class="input-group-text"> <i class="fas fa-building"></i> </span>
                     </div>
                     <input name="srcLocation" class="form-control" placeholder="Src Location" type="text">
                     <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                        <span class="input-group-text"> <i class="far fa-building"></i> </span>
                     </div>
                     <input name="destLocation" class="form-control" placeholder="Dest Location" type="text">
                     <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                        <span class="input-group-text"> <i class="fas fa-cubes"></i> </span>
                     </div>
                     <input name="itemName" class="form-control" placeholder="Item" type="text">
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                     </div>
-                    <input name="qty" class="form-control" placeholder="Qty" type="text">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
-                    </div>
-                    <input name="emp" class="form-control" placeholder="Emp. Assigned" type="text">
-                    <button action="Orders" type="submit" class="btn btn-primary">Search</button>
+                    <input name="emp" class="form-control" placeholder="Worker" type="text">
+                    <button name="listOrders" type="submit" class="btn btn-primary">Search</button>
                 </form><!-- form-group// -->
             </div>
 		<div class="card-body">
