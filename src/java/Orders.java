@@ -6,11 +6,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -26,6 +27,7 @@ public class Orders extends HttpServlet {
     private String emp;
     private String impDate;
     private String compDate;
+    private String status;
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -66,22 +68,27 @@ public class Orders extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         String action = request.getParameter("action");
         String OrderNum = request.getParameter("order");
+        request.setAttribute("dropUsers", dropUsersPop());
+        request.setAttribute("dropLocs", dropLocPop());
+        
         if("getOrder".equals(action)){
-            List<String> itemProperties = getOrder(OrderNum);
-            request.setAttribute("orderID", itemProperties.get(0));
-            request.setAttribute("impDate", itemProperties.get(1));
-            request.setAttribute("compDate", itemProperties.get(2));
-            request.setAttribute("srcLoc", itemProperties.get(3));
-            request.setAttribute("destLoc", itemProperties.get(4));
-            request.setAttribute("itemName", itemProperties.get(5));
-            request.setAttribute("userName", itemProperties.get(6));
-            request.setAttribute("orderQTY", itemProperties.get(7));
+            List<String> orderProperties = getOrder(OrderNum);
+            request.setAttribute("orderID", orderProperties.get(0));
+            request.setAttribute("impDate", orderProperties.get(1));
+            request.setAttribute("compDate", orderProperties.get(2));
+            request.setAttribute("srcLoc", orderProperties.get(3));
+            request.setAttribute("destLoc", orderProperties.get(4));
+            request.setAttribute("itemName", orderProperties.get(5));
+            request.setAttribute("userName", orderProperties.get(6));
+            request.setAttribute("orderQTY", orderProperties.get(7));
+            request.setAttribute("orderStatus", orderProperties.get(8));
+            
+            RequestDispatcher dispatcher = request.getRequestDispatcher("order.jsp");
+            dispatcher.forward(request, response);
         }
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("order.jsp");
-        dispatcher.forward(request, response);
     }
 
     /**
@@ -96,14 +103,20 @@ public class Orders extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Get the post input 
+        request.setAttribute("dropUsers", dropUsersPop());
+        request.setAttribute("dropLocs", dropLocPop());
         this.orderID = request.getParameter("orderID");
-        this.srcLocation = request.getParameter("srcLocation");
-        this.destLocation = request.getParameter("destLocation");
+        this.srcLocation = request.getParameter("srcLoc");
+        this.destLocation = request.getParameter("destLoc");
         this.itemName = request.getParameter("itemName");
         this.impDate = request.getParameter("impDate");
         this.compDate = request.getParameter("compDate");
-        this.qty = request.getParameter("qty");
-        this.emp = request.getParameter("emp");
+        this.qty = request.getParameter("orderQTY");
+        this.emp = request.getParameter("userName");
+        this.status = request.getParameter("status");
+        if(this.status == null ){
+            this.status = "true";
+        }
         
         
         if (request.getParameter("listOrders") != null) { 
@@ -117,26 +130,70 @@ public class Orders extends HttpServlet {
                 System.out.println(e);
             }
         }
+        
         else if (request.getParameter("update") != null) {
-            try{
-                updateOrder();
-            }catch(Exception ex){
-                System.out.println(ex);
-            }
             
-            List<String> itemProperties = getOrder(this.orderID);
-            request.setAttribute("orderID", itemProperties.get(0));
-            request.setAttribute("impDate", itemProperties.get(1));
-            request.setAttribute("compDate", itemProperties.get(2));
-            request.setAttribute("srcLoc", itemProperties.get(3));
-            request.setAttribute("destLoc", itemProperties.get(4));
-            request.setAttribute("itemName", itemProperties.get(5));
-            request.setAttribute("userName", itemProperties.get(6));
-            request.setAttribute("orderQTY", itemProperties.get(7));
+            request.setAttribute("order", this.orderID);
+            request.setAttribute("completed", updateOrder());
+            
+            List<String> orderProperties = getOrder(this.orderID);
+            request.setAttribute("orderID", orderProperties.get(0));
+            request.setAttribute("impDate", orderProperties.get(1));
+            request.setAttribute("compDate", orderProperties.get(2));
+            request.setAttribute("srcLoc", orderProperties.get(3));
+            request.setAttribute("destLoc", orderProperties.get(4));
+            request.setAttribute("itemName", orderProperties.get(5));
+            request.setAttribute("userName", orderProperties.get(6));
+            request.setAttribute("orderQTY", orderProperties.get(7));
+            request.setAttribute("orderStatus", orderProperties.get(8));
+            
+            RequestDispatcher dispatcher = request.getRequestDispatcher("order.jsp");
+            dispatcher.forward(request, response);
+            
+        }        
+        else if (request.getParameter("delete") != null) {
+            request.setAttribute("completed", deleteOrder());
+                        
+            RequestDispatcher dispatcher = request.getRequestDispatcher("workorders.jsp");
+            dispatcher.forward(request, response);
+            
+        }
+        else if (request.getParameter("create") != null) {
+            request.setAttribute("completed", newOrder());
+            
+            List<String> orderProperties = getOrder(this.orderID);
+            request.setAttribute("orderID", orderProperties.get(0));
+            request.setAttribute("impDate", orderProperties.get(1));
+            request.setAttribute("compDate", orderProperties.get(2));
+            request.setAttribute("srcLoc", orderProperties.get(3));
+            request.setAttribute("destLoc", orderProperties.get(4));
+            request.setAttribute("itemName", orderProperties.get(5));
+            request.setAttribute("userName", orderProperties.get(6));
+            request.setAttribute("orderQTY", orderProperties.get(7));
+            request.setAttribute("orderStatus", orderProperties.get(8));
             
             RequestDispatcher dispatcher = request.getRequestDispatcher("order.jsp");
             dispatcher.forward(request, response);
         }
+        
+        else if (request.getParameter("execute") != null) {
+            request.setAttribute("completed", execOrder());
+            
+            List<String> orderProperties = getOrder(this.orderID);
+            request.setAttribute("orderID", orderProperties.get(0));
+            request.setAttribute("impDate", orderProperties.get(1));
+            request.setAttribute("compDate", orderProperties.get(2));
+            request.setAttribute("srcLoc", orderProperties.get(3));
+            request.setAttribute("destLoc", orderProperties.get(4));
+            request.setAttribute("itemName", orderProperties.get(5));
+            request.setAttribute("userName", orderProperties.get(6));
+            request.setAttribute("orderQTY", orderProperties.get(7));
+            request.setAttribute("orderStatus", orderProperties.get(8));
+            
+            RequestDispatcher dispatcher = request.getRequestDispatcher("order.jsp");
+            dispatcher.forward(request, response);
+        }
+        
     }
 
        /**
@@ -163,10 +220,11 @@ public class Orders extends HttpServlet {
             //initialize statement
             Statement stmt = conn.createStatement();
             
-            String sql = "SELECT order_id, imp_date, locations.loc_name, dest_loc ,items.item_name,order_qty, users.username FROM orders \n" +
-                        "INNER JOIN locations ON orders.src_loc = locations.loc_id\n" +
+            String sql = "SELECT order_id, imp_date, L1.loc_name AS src_loc_name, L2.loc_name AS dest_loc_name, items.item_name,order_qty, users.username FROM orders \n" +
+                        "LEFT JOIN locations L1 ON orders.src_loc = L1.loc_id\n" +
+                        "LEFT JOIN locations L2 ON orders.dest_loc = L2.loc_id\n" +
                         "INNER JOIN items ON orders.item_id = items.item_id\n" +
-                        "INNER JOIN users ON orders.user_id = users.user_id ";
+                        "LEFT JOIN users ON orders.user_id = users.user_id ";
             
             if(this.orderID != null && !this.orderID.trim().isEmpty() || this.srcLocation != null && !this.srcLocation.trim().isEmpty() || this.destLocation != null && !this.destLocation.trim().isEmpty() || this.itemName != null && !this.itemName.trim().isEmpty() || this.qty != null && !this.qty.trim().isEmpty() || this.emp != null && !this.emp.trim().isEmpty()){
                 sql += " WHERE ";
@@ -180,14 +238,14 @@ public class Orders extends HttpServlet {
                 if(this.orderID != null && !this.orderID.trim().isEmpty()){
                     sql += " AND ";
                 }
-                sql += "locations.loc_name LIKE '%" + this.srcLocation + "%'";
+                sql += "L1.loc_name LIKE '%" + this.srcLocation + "%'";
             }
             
             if(this.destLocation != null && !this.destLocation.trim().isEmpty()){
                 if(this.orderID != null && !this.orderID.trim().isEmpty() || this.srcLocation != null && !this.srcLocation.trim().isEmpty()){
                     sql += " AND ";
                 }
-                sql += "dest_loc = " + this.destLocation;
+                sql += "L2.loc_name LIKE '%" + this.destLocation + "%'";
             }
             
             if(this.itemName != null && !this.itemName.trim().isEmpty()){
@@ -265,50 +323,68 @@ public class Orders extends HttpServlet {
         return finalOut;
     }
 
-    public String createOrder() {
-
-        String finalOut = "DEGBUG";
+    public String newOrder(){
+        String works = "error";
         Connection conn = null;
-        
-        String sqlOrderQuery = 
-            "SELECT work_id FROM work_orders ORDER BY work_id DESC limit 1;";
-        int lastWorkID;
-        
-        
-
-        try{
+        try {
+            conn = Database.getConnection();
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sqlOrderQuery);
-            lastWorkID = rs.getInt(1);
-
-
-    
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return "DEBUG";
-    }
-
-    public String deleteOrder() throws SQLException {
-
-        String finalOut = "DEGBUG";
-        Connection conn = null;
-        Statement stmt = conn.createStatement();
-
-        try{
+            String sql = "INSERT INTO orders (order_id, imp_date, comp_date, src_loc, dest_loc, item_id, user_id, order_qty) Values (";
             
-            String sqlDeleteQuery = "delete from work_id";
-        
-    
-        } catch (Exception e) {
-            System.out.println(e);
+			
+            sql += this.orderID + ", ";
+            sql += "'" + this.impDate + "', ";
+            if(this.compDate != null && !this.compDate.trim().isEmpty()){
+                sql += "'" + this.compDate + "', ";
+            }
+            else{
+                sql += "null, ";
+            }
+            sql += this.srcLocation + ", ";
+            if(this.destLocation != null && !this.destLocation.trim().isEmpty()){
+                sql += this.destLocation + ", ";
+            }
+            else{
+                sql += "null, ";
+            }
+            sql += this.itemName + ", ";
+            if(this.emp != null && !this.emp.trim().isEmpty()){
+                sql += this.emp + ", ";
+            }
+            else{
+                sql += "null, ";
+            }
+            sql += this.qty + ") ";
+                        
+            System.out.println(sql);  //For debugging
+            stmt.executeUpdate(sql);
+            works = "created";
+            conn.close();
+        }catch(Exception ex){
+            System.out.println(ex);
         }
-
-        return "DEBUG";
+        return works;
     }
 
-    public void updateOrder() throws SQLException  
+    public String deleteOrder(){
+        String works = "error";
+        Connection conn = null;
+        try {
+            conn = Database.getConnection();
+            Statement stmt = conn.createStatement();
+            String sql = "DELETE FROM orders WHERE order_id = " + this.orderID;
+            stmt.executeUpdate(sql);
+            conn.close();
+            works = "deleted";
+        }catch(Exception ex){
+            System.out.println(ex);
+        }
+        return works;
+    }
+
+    public String updateOrder()
     {
+        String works = "error";
         Connection conn = null;
         try {
             conn = Database.getConnection();
@@ -317,44 +393,23 @@ public class Orders extends HttpServlet {
 
             String sql = "UPDATE orders SET ";
                         
-            if(this.impDate != null && !this.impDate.trim().isEmpty()){
-                sql += "imp_date = '" + this.impDate + "'";
-            }            
-            if(this.compDate != null && !this.compDate.trim().isEmpty()){
-                sql += ", ";
-                sql += "comp_date = '" + this.compDate + "'";
-            }            
-            if(this.srcLocation != null && !this.srcLocation.trim().isEmpty()){
-                sql += ", ";
-                sql += "src_loc = '" + this.srcLocation + "'";
-            }
-            if(this.destLocation != null && !this.destLocation.trim().isEmpty()){
-                sql += ", ";
-                sql += "dest_loc = '" + this.destLocation + "'";
-            }
-            /*if(this.itemID != null && !this.itemID.trim().isEmpty()){
-                sql += ", ";
-                sql += "item_id = " + this.itemID;
-            }*/
-            if(this.qty != null && !this.qty.trim().isEmpty()){
-                sql += ", ";
-                sql += "order_qty = " + this.qty;
-            }
-            /*if(this.userID != null && !this.userID.trim().isEmpty()){
-                sql += ", ";
-                sql += "user_id = " + this.userID;
-            }*/ 
+            sql += "imp_date = '" + this.impDate + "'";
+            sql += ",comp_date = '" + this.compDate + "'"; 
+            sql += ",src_loc = '" + this.srcLocation + "'";
+            sql += ",dest_loc = '" + this.destLocation + "'";
+            sql += ",order_qty = " + this.qty;
+            sql += ",status = " + this.status;
             
             sql += " WHERE order_id = " + this.orderID + ";";
-            
             
             //System.out.println(sql);  //For debugging
             stmt.executeUpdate(sql);
             conn.close();
-            
+            works = "updated";
         }catch(Exception ex){
             System.out.println(ex);
         }
+        return works;
     }
     
     public List<String> getOrder(String orderID){        
@@ -364,10 +419,11 @@ public class Orders extends HttpServlet {
         try {
             conn = Database.getConnection();
             Statement stmt = conn.createStatement();
-            String sql = "SELECT order_id, imp_date,comp_date, locations.loc_name, dest_loc ,items.item_name,order_qty, users.username FROM orders \n" +
-                        "INNER JOIN locations ON orders.src_loc = locations.loc_id\n" +
+            String sql = "SELECT order_id, imp_date,comp_date, L1.loc_name AS src_loc_name, L2.loc_name AS dest_loc_name,items.item_name,order_qty, users.username,status FROM orders \n" +
+                        "LEFT JOIN locations L1 ON orders.src_loc = L1.loc_id\n" +
+                        "LEFT JOIN locations L2 ON orders.dest_loc = L2.loc_id\n" +
                         "INNER JOIN items ON orders.item_id = items.item_id\n" +
-                        "INNER JOIN users ON orders.user_id = users.user_id \n"
+                        "LEFT JOIN users ON orders.user_id = users.user_id \n"
                         + "WHERE order_id = " + orderID;
             
             ResultSet rs = stmt.executeQuery(sql);
@@ -382,6 +438,7 @@ public class Orders extends HttpServlet {
                 orderInfo.add(rs.getString(6));
                 orderInfo.add(rs.getString(8));
                 orderInfo.add(rs.getString(7));
+                orderInfo.add(rs.getString(9));
             }
            
             conn.close();
@@ -391,5 +448,82 @@ public class Orders extends HttpServlet {
         return orderInfo;
     }
 
-
+    public List<String> dropUsersPop(){
+        List<String> dropUsers = new ArrayList();
+        Connection conn = null;
+        try {
+            conn = Database.getConnection();
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT username FROM users";
+            
+            //System.out.println(sql);  //For debugging
+            ResultSet rs = stmt.executeQuery(sql);
+            
+            while (rs.next()) {
+                dropUsers.add(rs.getString(1));
+            }
+            conn.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    
+        return dropUsers;
+    }
+    
+    public List<String> dropLocPop(){
+        List<String> dropLocs = new ArrayList();
+        Connection conn = null;
+        try {
+            conn = Database.getConnection();
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT loc_name FROM locations ORDER BY loc_id";
+            
+            //System.out.println(sql);  //For debugging
+            ResultSet rs = stmt.executeQuery(sql);
+            
+            while (rs.next()) {
+                dropLocs.add(rs.getString(1));
+            }
+            conn.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    
+        return dropLocs;
+    } 
+    
+     public String execOrder()
+    {
+        String works = "error";
+        Connection conn = null;
+        try {
+            conn = Database.getConnection();
+            Statement stmt = conn.createStatement();
+            
+            LocalDateTime myDateObj = LocalDateTime.now(); 
+            DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("dd/MM/yyyy");      
+            String formattedDate = myDateObj.format(datePattern); 
+            
+            String sql1 = "UPDATE orders SET ";
+            sql1 += "comp_date = '"+ formattedDate + "'";
+            sql1 += ", status = false";
+            sql1 += " WHERE order_id = " + this.orderID + ";";
+            //System.out.println("SQL 1: " + sql1);  //For debugging
+                  
+            stmt.executeUpdate(sql1);
+            
+            String sql2 = "UPDATE items SET ";
+            sql2 += "item_loc = " + this.destLocation;
+            sql2 += " WHERE item_name = '" + this.itemName + "';";
+            System.out.println("SQL 2: " + sql2);  //For debugging
+            //stmt.executeUpdate(sql2);
+            
+            
+            conn.close();
+            works = "updated";
+        }catch(Exception ex){
+            System.out.println(ex);
+        }
+        return works;
+    }
 } 

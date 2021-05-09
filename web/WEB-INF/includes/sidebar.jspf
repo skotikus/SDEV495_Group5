@@ -4,7 +4,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.jsp">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="Dashboard">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fab fa-google"></i>
                 </div>
@@ -48,7 +48,6 @@
                         <a class="collapse-item" href="item.jsp?action=new">New Item</a>
                         <% } %>
                         <a class="collapse-item" href="inventory.jsp">Inventory</a>
-                        <a class="collapse-item" href="invreport.jsp">Reports</a>
                     </div>
                 </div>
             </li>
@@ -75,10 +74,9 @@
                             Integer sidePermWO = (Integer) session.getAttribute("Role");
                             if(sidePermWO >= 2){
                         %>
-                        <a class="collapse-item" href="#">New Work Order</a>
+                        <a class="collapse-item" href="order.jsp?action=new">New Work Order</a>
                         <% } %>
                         <a class="collapse-item" href="workorders.jsp">View Work Orders</a>
-                        <a class="collapse-item" href="workreports.jsp">Reports</a>
                     </div>
                 </div>
             </li>

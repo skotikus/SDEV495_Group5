@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -123,15 +122,13 @@ public class Items extends HttpServlet {
         else if (request.getParameter("update") != null) {
             
             request.setAttribute("item", this.sku);
-            
+            request.setAttribute("completed", updateItem());
             List<String> itemProperties = getItem(this.sku);
             request.setAttribute("itemSKU", itemProperties.get(0));
             request.setAttribute("itemName", itemProperties.get(1));
             request.setAttribute("itemQTY", itemProperties.get(2));
             request.setAttribute("itemLoc", itemProperties.get(3));
             request.setAttribute("itemColor", itemProperties.get(4));
-            
-            request.setAttribute("completed", updateItem());
             
             RequestDispatcher dispatcher = request.getRequestDispatcher("item.jsp");
             dispatcher.forward(request, response);

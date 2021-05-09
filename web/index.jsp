@@ -165,7 +165,7 @@ form{
                                                 <%
                                                     } else {
                                                         request.setAttribute("ErrorMessage", "");
-                                                        RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
+                                                        RequestDispatcher dispatcher = request.getRequestDispatcher("Dashboard");
                                                         dispatcher.forward(request, response);                    
                                                     }
                                                 %>
