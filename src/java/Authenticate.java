@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+
 public class Authenticate extends HttpServlet {
 
     // variables    
@@ -89,14 +90,14 @@ public class Authenticate extends HttpServlet {
         if (isValid) {
             // Create a session object if it is already not created.
             session = request.getSession(true);
-            session.setAttribute("UserName", username);         
-            session.setAttribute("UserID", user_id);
-            session.setAttribute("Role", getRole(user_id));
-            session.setAttribute("Location", getLocation(user_id));
+            session.setAttribute("UserName", this.username);         
+            session.setAttribute("UserID", this.user_id);
+            session.setAttribute("Role", getRole(this.user_id));
+            session.setAttribute("Location", getLocation(this.user_id));
 
-            // Send to the Home JSP page              
+            // Send to the Home JSP page via dashboard servlet            
             
-            RequestDispatcher dispatcher = request.getRequestDispatcher("Dashboard");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/Dashboard");
             dispatcher.forward(request, response);
 
         } else {
@@ -115,7 +116,7 @@ public class Authenticate extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Manages Sign in and session creation";
     }// </editor-fold>
 
     // Method to Authenticate
@@ -129,10 +130,10 @@ public class Authenticate extends HttpServlet {
             String sql = "select user_id from users where username = '" + this.username + "'";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                user_id = rs.getInt(1);
+                this.user_id = rs.getInt(1);
             }
-            if (user_id > 0) {                
-                String sql2 = "select user_id from user_info where user_id = " + user_id + " and password COLLATE utf8_bin = '" + this.pword + "'";
+            if (this.user_id > 0) {                
+                String sql2 = "select user_id from user_info where user_id = " + this.user_id + " and password COLLATE utf8_bin = '" + this.pword + "'";
                 ResultSet rs2 = stmt.executeQuery(sql2);
                 while (rs2.next()) {
                     hitcnt++;
@@ -174,7 +175,7 @@ public class Authenticate extends HttpServlet {
         try {
             conn = Database.getConnection();
             Statement stmt = conn.createStatement();
-            String sql = "SELECT location from user_roles WHERE user_id = " + userID;
+            String sql = "SELECT loc_id from users WHERE user_id = " + userID;
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 loc = rs.getInt(1);

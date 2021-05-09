@@ -16,7 +16,6 @@
     String result = (String) request.getAttribute("completed");
     if("updated".equals(result) || "created".equals(result)){      
 %>
-
 <div class="alert alert-success alert-dismissible fade show" role="alert">
   <strong>Success!</strong> Your item has been ${completed}.
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -39,12 +38,20 @@ else if("error".equals(result)){
 <% 
     }
 %>
-
+<%
+String action = request.getParameter("action");
+    Boolean newy = null;
+    if("new".equals(action)){
+        newy = true;
+    }else{
+        newy = false;
+    }
+%>
 
 <!-- Begin Page Content -->
 <div class="container-fluid">    
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Item ${item} Details</h1>
+        <h1 class="h3 mb-0 text-gray-800"><% if(!newy){ %>${item}<% }else{ %>New Item<%}%> Details</h1>
     </div>
      
     <div class="card shadow mb-4">
@@ -54,16 +61,6 @@ else if("error".equals(result)){
             <div class="row">
                 <div class="col-8">
                     <form action="Items" method="post">
-                        <%
-                            String action = request.getParameter("action");
-                            Boolean newy = null;
-                            if("new".equals(action)){
-                                newy = true;
-                            }else{
-                                newy = false;
-                            }
-                        %>
-                        
                         <div class="form-group row">
                             <label for="itemSKU" class="col-4 col-form-label">Item SKU</label> 
                             <div class="col-8">

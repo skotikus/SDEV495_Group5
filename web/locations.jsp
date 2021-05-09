@@ -43,6 +43,19 @@ else if("error".equals(result)){
 <div class="container-fluid">    
     <div class="card shadow mb-4">
         <div class="card-header py-3">
+            <%
+                //check permission to display admin level page items
+                Integer permLvl = (Integer) session.getAttribute("Role");
+                if(permLvl >= 2){
+            %>
+            <div class="form-group row">
+                <a class="btn btn-primary" href="location.jsp?action=new" role="button">Create New Location</a>
+            </div>
+            <% } %>
+        </div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Search Locations</h6>
             <div class="row">
                 <form action="Locations" class="form-group input-group" method="post">
@@ -76,18 +89,6 @@ else if("error".equals(result)){
             </div>
 	</div>
     </div>
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <%
-                //check permission to display admin level page items
-                Integer permLvl = (Integer) session.getAttribute("Role");
-                if(permLvl >= 2){
-            %>
-            <div class="form-group row">
-                <a class="btn btn-primary" href="location.jsp?action=new" role="button">Create New Location</a>
-            </div>
-            <% } %>
-        </div>
-    </div>
+    
 </div>
 <%@include file="WEB-INF/includes/footer.jspf" %>

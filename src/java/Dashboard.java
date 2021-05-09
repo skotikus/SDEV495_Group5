@@ -24,6 +24,7 @@ import java.sql.Statement;
 @WebServlet(urlPatterns = {"/Dashboard"})
 public class Dashboard extends HttpServlet {
 
+    private HttpSession session;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -63,14 +64,14 @@ public class Dashboard extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        HttpSession session = request.getSession(false);
+        session = request.getSession(false);
         Integer userID = (Integer) session.getAttribute("UserID");
         Integer locID = (Integer) session.getAttribute("Location");
         
         request.setAttribute("locItems", locItemsNum(locID));
         request.setAttribute("openOrders", openOrdersNum());
         request.setAttribute("myOrders", getMyOrdersNum(userID));
-        
+        request.setAttribute("ordersTable", getMyOrders(userID));
         RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
         dispatcher.forward(request, response);
     }
@@ -94,7 +95,7 @@ public class Dashboard extends HttpServlet {
         request.setAttribute("locItems", locItemsNum(locID));
         request.setAttribute("openOrders", openOrdersNum());
         request.setAttribute("myOrders", getMyOrdersNum(userID));
-        
+        request.setAttribute("ordersTable", getMyOrders(userID));
         RequestDispatcher dispatcher = request.getRequestDispatcher("home.jsp");
         dispatcher.forward(request, response);
     }
@@ -164,6 +165,83 @@ public class Dashboard extends HttpServlet {
             System.out.println(ex);
         }
         return items;
+    }
+    
+    public String getMyOrders(Integer methodUserID){
+        
+        String finalOut = "DEGBUG";
+        Connection conn = null;
+
+
+        try{
+            //open a connection
+            conn = Database.getConnection();
+
+            //initialize statement
+            Statement stmt = conn.createStatement();
+            
+            String sql = "SELECT order_id, imp_date, L1.loc_name AS src_loc_name, L2.loc_name AS dest_loc_name, items.item_name,order_qty, users.username FROM orders \n" +
+                        "LEFT JOIN locations L1 ON orders.src_loc = L1.loc_id\n" +
+                        "LEFT JOIN locations L2 ON orders.dest_loc = L2.loc_id\n" +
+                        "INNER JOIN items ON orders.item_id = items.item_id\n" +
+                        "LEFT JOIN users ON orders.user_id = users.user_id ";
+            
+            sql += "WHERE orders.user_id = " + methodUserID + " AND status = 1";
+            
+            sql += " ORDER BY order_id";
+            //System.out.println(sql);
+                
+            //run the query and get the results
+            ResultSet rs = stmt.executeQuery(sql);
+
+            //formatting the top of the table
+            finalOut = "<table class=\"table table-bordered table-hover\" id=\"dataTable\" width=\"100%\" cellspacing=\"0\">\n" +
+                                                        "<thead>\n" +
+"						<tr>\n" +
+"                                                    <th>Order #</th>\n" +
+"                                                    <th>Fill Date</th>\n" +
+"                                                    <th>Src Location</th>\n" +
+"                                                    <th>Dest Location</th>\n" +
+"                                                    <th>Item</th>\n" +
+"                                                    <th>QTY</th>\n" +
+"                                                    <th>Emp. Assigned</th>\n" +                     
+"						</tr>\n" +
+"					</thead>\n" +
+"					<tfoot>\n" +
+"						<tr>\n" +
+"                                                    <th>Order #</th>\n" +
+"                                                    <th>Fill Date</th>\n" +
+"                                                    <th>Src Location</th>\n" +
+"                                                    <th>Dest Location</th>\n" +
+"                                                    <th>Item</th>\n" +
+"                                                    <th>QTY</th>\n" +
+"                                                    <th>Emp. Assigned</th>\n" +                     
+"						</tr>\n" +
+"					</tfoot>\n" + 
+"                                       <tbody>";
+                            //while the set still has output, add it in to the table
+                            while (rs.next()) {
+                                finalOut += "<tr onclick=\"window.location='Orders?order=" + rs.getString(1) + "&action=getOrder'\">\n" +
+                "                               <td>" + rs.getString(1) + "</td>\n" +
+                "                               <td>" + rs.getString(2) + "</td>\n" +
+                "                               <td>" + rs.getString(3) + "</td>\n" +
+                "                               <td>" + rs.getString(4) + "</td>\n" +
+                "                               <td>" + rs.getString(5) + "</td>\n" +
+                "                               <td>" + rs.getString(6) + "</td>\n" +
+                "                               <td>" + rs.getString(7) + "</td>\n" +
+                "                             </tr>";
+            }
+            //close the table
+            finalOut += "</table>";
+            //close the connection
+            conn.close();
+            
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+        return finalOut;
     }
   
 }

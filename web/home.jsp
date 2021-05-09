@@ -83,28 +83,9 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <div class="card-body">
-                <h6 class="m-0 font-weight-bold text-primary">Workflow</h6>
+                <h6 class="m-0 font-weight-bold text-primary">My Work Orders</h6>
                 <div class="my-2"></div>
-                    <a href="workorders.jsp" class="btn btn-primary btn-icon-split btn-lg">
-                        <span class="icon text-white-50">
-                            <i class="fas fa-clipboard-list"></i>
-                        </span>
-                        <span class="text">Open Work Orders</span>
-                    </a>
-                <div class="my-2"></div>
-                    <a href="inventory.jsp" class="btn btn-info btn-icon-split btn-lg">
-                        <span class="icon text-white-50">
-                            <i class="fas fa-search"></i>
-                        </span>
-                        <span class="text">Search Items</span>
-                    </a>
-                <div class="my-2"></div>
-                    <a href="Users" class="btn btn-secondary btn-icon-split btn-lg">
-                        <span class="icon text-white-50">
-                            <i class="fas fa-user-tie"></i>
-                        </span>
-                        <span class="text">My Profile</span>
-                    </a>
+                    ${ordersTable}
                 </div>
             </div>  
         </div>
