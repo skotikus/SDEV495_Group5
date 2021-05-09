@@ -34,7 +34,7 @@
     
     
 </div>
-<!-- Logout Modal-->
+<!-- reset Modal-->
     <div class="modal fade" id="ResetModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -49,7 +49,7 @@
                 <div class="modal-footer">
                     <form action="#" method="post">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button class="btn btn-outline-danger" type="submit" name="reset">Reset</button>
+                        <button class="btn btn-outline-danger" name="reset">Reset</button>
                     </form>
                 </div>
             </div>

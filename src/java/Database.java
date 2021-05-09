@@ -23,10 +23,10 @@ public class Database {
     
     public static Connection getConnection(){
         Connection conn = null;
-        String server = "";
-        String database = "";
-        String username = "";
-        String password = "";
+        String server = "jdbc:mysql://ableit.asuscomm.com:3306";
+        String database = "GRP5_scott";
+        String username = "grp5_dbsa";
+        String password = "Grp5iveRul3z!!";
         try { 
             conn = DriverManager.getConnection(server + "/" + database,username,password);
         } catch (Exception ex) {

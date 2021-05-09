@@ -157,7 +157,7 @@ public class Authenticate extends HttpServlet {
         try {
             conn = Database.getConnection();
             Statement stmt = conn.createStatement();
-            String sql = "select role_id from user_roles where user_id = " + userID;
+            String sql = "select role_id from users where user_id = " + userID;
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 role = rs.getInt(1);
