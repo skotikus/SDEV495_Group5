@@ -76,7 +76,8 @@ else if("error".equals(result)){
                         <div class="form-group row">
                             <label for="status" class="col-4 col-form-label">Order Closed</label> 
                             <div class="col-8">
-                                <input id="status" name="status" class="form-control here" type="checkbox" value="${orderStatus}" <c:if test="${orderStatus == 0}">checked</c:if>>
+                                <input id="status" name="status" class="form-control here" type="checkbox" value="<c:if test="${orderStatus == 0}">false</c:if>" <c:if test="${orderStatus == 0}">checked</c:if>>
+                                <center><label for="status">*Only Checked by execution</label></center>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -89,12 +90,15 @@ else if("error".equals(result)){
                             <label for="srcLoc" class="col-4 col-form-label">Source Location</label> 
                             <div class="col-8">
                                 <select id="srcLoc" name="srcLoc" class="custom-select">
-                                    <option value="${srcLoc}" selected>${srcLoc}</option>
-                                    <c:forEach var="location" items="${dropLocs}">
-                                        <c:if test="${location != srcLoc}">
-                                            <option value="<c:out value="${location}"/>"><c:out value="${location}"/></option> 
+                                    <c:forEach var="location" items="${dropLocs}" varStatus="loop">
+                                        <c:if test="${location == srcLoc}">
+                                            <c:set var="srcLocIndex" value="${loop.index}"/>
                                         </c:if>
-                                    </c:forEach>           
+                                        <c:if test="${location != srcLoc}">
+                                            <option value="<c:out value="${loop.index + 1}"/>"><c:out value="${location}"/></option> 
+                                        </c:if>
+                                    </c:forEach>
+                                    <option value="${srcLocIndex + 1}" selected>${srcLoc}</option>
                                 </select>
                             </div>
                         </div>
@@ -102,12 +106,15 @@ else if("error".equals(result)){
                             <label for="destLoc" class="col-4 col-form-label">Destination Location</label> 
                             <div class="col-8">
                                 <select id="destLoc" name="destLoc" class="custom-select">
-                                    <option value="${destLoc}" selected>${destLoc}</option>
-                                    <c:forEach var="location" items="${dropLocs}">
-                                        <c:if test="${location != destLoc}">
-                                            <option value="<c:out value="${location}"/>"><c:out value="${location}"/></option> 
+                                    <c:forEach var="location" items="${dropLocs}" varStatus="loop">
+                                        <c:if test="${location == destLoc}">
+                                            <c:set var="destLocIndex" value="${loop.index}"/>
                                         </c:if>
-                                    </c:forEach>           
+                                        <c:if test="${location != destLoc}">
+                                            <option value="<c:out value="${loop.index + 1}"/>"><c:out value="${location}"/></option> 
+                                        </c:if>
+                                    </c:forEach>
+                                    <option value="${destLocIndex + 1}" selected>${destLoc}</option>
                                 </select>
                             </div>
                         </div>

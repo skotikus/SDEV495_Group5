@@ -21,7 +21,6 @@
             <h6 class="m-0 font-weight-bold text-primary">Database Reset</h6>
             <br />
             <div class="row">
-                <img src="img/oops.jpg">
                 <p>If you're reading this then something terrible has happened and you need to cover your tracks</p>
                 <p>Press this button to reset the Database back to Demo Data</p>
                 <br />
@@ -48,7 +47,7 @@
                 </div>
                 <div class="modal-body">Clicking reset will reset the database to default demo data. All passwords will be reset to "TestPass".</div>
                 <div class="modal-footer">
-                    <form action="Settings" method="post">
+                    <form action="#" method="post">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                         <button class="btn btn-outline-danger" type="submit" name="reset">Reset</button>
                     </form>

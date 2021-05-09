@@ -10,6 +10,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -71,6 +73,7 @@ public class Orders extends HttpServlet {
         String OrderNum = request.getParameter("order");
         request.setAttribute("dropUsers", dropUsersPop());
         request.setAttribute("dropLocs", dropLocPop());
+        
         if("getOrder".equals(action)){
             List<String> orderProperties = getOrder(OrderNum);
             request.setAttribute("orderID", orderProperties.get(0));
@@ -86,10 +89,6 @@ public class Orders extends HttpServlet {
             RequestDispatcher dispatcher = request.getRequestDispatcher("order.jsp");
             dispatcher.forward(request, response);
         }
-        
-        
-
-        
     }
 
     /**
@@ -104,6 +103,8 @@ public class Orders extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Get the post input 
+        request.setAttribute("dropUsers", dropUsersPop());
+        request.setAttribute("dropLocs", dropLocPop());
         this.orderID = request.getParameter("orderID");
         this.srcLocation = request.getParameter("srcLoc");
         this.destLocation = request.getParameter("destLoc");
@@ -113,6 +114,9 @@ public class Orders extends HttpServlet {
         this.qty = request.getParameter("orderQTY");
         this.emp = request.getParameter("userName");
         this.status = request.getParameter("status");
+        if(this.status == null ){
+            this.status = "true";
+        }
         
         
         if (request.getParameter("listOrders") != null) { 
@@ -389,37 +393,16 @@ public class Orders extends HttpServlet {
 
             String sql = "UPDATE orders SET ";
                         
-            if(this.impDate != null && !this.impDate.trim().isEmpty()){
-                sql += "imp_date = '" + this.impDate + "'";
-            }            
-            if(this.compDate != null && !this.compDate.trim().isEmpty()){
-                sql += ", ";
-                sql += "comp_date = '" + this.compDate + "'";
-            }            
-            if(this.srcLocation != null && !this.srcLocation.trim().isEmpty()){
-                sql += ", ";
-                sql += "src_loc = '" + this.srcLocation + "'";
-            }
-            if(this.destLocation != null && !this.destLocation.trim().isEmpty()){
-                sql += ", ";
-                sql += "dest_loc = '" + this.destLocation + "'";
-            }
-            /*if(this.itemID != null && !this.itemID.trim().isEmpty()){
-                sql += ", ";
-                sql += "item_id = " + this.itemID;
-            }*/
-            if(this.qty != null && !this.qty.trim().isEmpty()){
-                sql += ", ";
-                sql += "order_qty = " + this.qty;
-            }
-            sql += ", ";
-            sql += "status = " + this.status;
-           
+            sql += "imp_date = '" + this.impDate + "'";
+            sql += ",comp_date = '" + this.compDate + "'"; 
+            sql += ",src_loc = '" + this.srcLocation + "'";
+            sql += ",dest_loc = '" + this.destLocation + "'";
+            sql += ",order_qty = " + this.qty;
+            sql += ",status = " + this.status;
             
             sql += " WHERE order_id = " + this.orderID + ";";
             
-            
-            System.out.println(sql);  //For debugging
+            //System.out.println(sql);  //For debugging
             stmt.executeUpdate(sql);
             conn.close();
             works = "updated";
@@ -493,7 +476,7 @@ public class Orders extends HttpServlet {
         try {
             conn = Database.getConnection();
             Statement stmt = conn.createStatement();
-            String sql = "SELECT loc_name FROM locations";
+            String sql = "SELECT loc_name FROM locations ORDER BY loc_id";
             
             //System.out.println(sql);  //For debugging
             ResultSet rs = stmt.executeQuery(sql);
@@ -516,17 +499,26 @@ public class Orders extends HttpServlet {
         try {
             conn = Database.getConnection();
             Statement stmt = conn.createStatement();
-            //find out how to translate locations or make drop downs
-
-            String sql = "UPDATE items SET ";
-                        
+            
+            LocalDateTime myDateObj = LocalDateTime.now(); 
+            DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("dd/MM/yyyy");      
+            String formattedDate = myDateObj.format(datePattern); 
+            
+            String sql1 = "UPDATE orders SET ";
+            sql1 += "comp_date = '"+ formattedDate + "'";
+            sql1 += ", status = false";
+            sql1 += " WHERE order_id = " + this.orderID + ";";
+            //System.out.println("SQL 1: " + sql1);  //For debugging
+                  
+            stmt.executeUpdate(sql1);
+            
+            String sql2 = "UPDATE items SET ";
+            sql2 += "item_loc = " + this.destLocation;
+            sql2 += " WHERE item_name = '" + this.itemName + "';";
+            System.out.println("SQL 2: " + sql2);  //For debugging
+            //stmt.executeUpdate(sql2);
             
             
-            sql += " WHERE order_id = " + this.orderID + ";";
-            
-            
-            //System.out.println(sql);  //For debugging
-            stmt.executeUpdate(sql);
             conn.close();
             works = "updated";
         }catch(Exception ex){

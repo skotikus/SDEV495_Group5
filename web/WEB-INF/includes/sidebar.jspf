@@ -48,7 +48,6 @@
                         <a class="collapse-item" href="item.jsp?action=new">New Item</a>
                         <% } %>
                         <a class="collapse-item" href="inventory.jsp">Inventory</a>
-                        <a class="collapse-item" href="invreport.jsp">Reports</a>
                     </div>
                 </div>
             </li>
@@ -78,7 +77,6 @@
                         <a class="collapse-item" href="order.jsp?action=new">New Work Order</a>
                         <% } %>
                         <a class="collapse-item" href="workorders.jsp">View Work Orders</a>
-                        <a class="collapse-item" href="workreports.jsp">Reports</a>
                     </div>
                 </div>
             </li>
