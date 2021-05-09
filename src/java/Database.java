@@ -23,7 +23,7 @@ public class Database {
     
     public static Connection getConnection(){
         Connection conn = null;
-        String server = "";
+        String server = "jdbc:mysql://";
         String database = "";
         String username = "";
         String password = "";
