@@ -4,7 +4,8 @@
     Author     : Scott Forsyth
 --%>
 <%   
-    if(session.getAttribute("UserName") == null){
+    Integer permLvl = (Integer) session.getAttribute("Role");
+    if(session.getAttribute("UserName") == null && permLvl >= 2){
         request.getRequestDispatcher("/index.jsp").forward(request,response);
     }
 %>
@@ -31,8 +32,18 @@
             </div>
         </div>
     </div>
-    
-    
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Database Backup</h6>
+            <br />
+            <div class="row">
+                <p>Creates a restorable SQL file you can rebuild the database in data with.</p>
+            </div>
+            <div class="row">
+                <a href="downloads/Database-backup.sql" download><button class="btn btn-outline-danger">Download Backup</button></a>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- reset Modal-->
     <div class="modal fade" id="ResetModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

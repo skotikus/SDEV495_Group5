@@ -522,7 +522,7 @@ public class Orders extends HttpServlet {
             sql2 += "item_loc = " + this.destLocation;
             sql2 += " WHERE item_name = '" + this.itemName + "';";
             System.out.println("SQL 2: " + sql2);  //For debugging
-            //stmt.executeUpdate(sql2);
+            stmt.executeUpdate(sql2);
             
             
             conn.close();
