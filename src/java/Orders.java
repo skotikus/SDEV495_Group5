@@ -89,6 +89,10 @@ public class Orders extends HttpServlet {
             RequestDispatcher dispatcher = request.getRequestDispatcher("order.jsp");
             dispatcher.forward(request, response);
         }
+        if("new".equals(action)){
+            RequestDispatcher dispatcher = request.getRequestDispatcher("order.jsp");
+            dispatcher.forward(request, response);
+        }
     }
 
     /**
@@ -349,11 +353,12 @@ public class Orders extends HttpServlet {
             }
             sql += this.itemName + ", ";
             if(this.emp != null && !this.emp.trim().isEmpty()){
-                sql += this.emp + ", ";
+                sql += "(SELECT users.user_id FROM users WHERE users.username = '" + this.emp + "'), ";
             }
             else{
                 sql += "null, ";
             }
+                        
             sql += this.qty + ") ";
                         
             System.out.println(sql);  //For debugging
@@ -399,7 +404,8 @@ public class Orders extends HttpServlet {
             sql += ",dest_loc = '" + this.destLocation + "'";
             sql += ",order_qty = " + this.qty;
             sql += ",status = " + this.status;
-            
+            sql += ",user_id = (SELECT users.user_id FROM users WHERE users.username = '" + this.emp + "')";
+                        
             sql += " WHERE order_id = " + this.orderID + ";";
             
             //System.out.println(sql);  //For debugging

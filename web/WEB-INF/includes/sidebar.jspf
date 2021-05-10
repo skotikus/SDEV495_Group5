@@ -74,7 +74,7 @@
                             Integer sidePermWO = (Integer) session.getAttribute("Role");
                             if(sidePermWO >= 2){
                         %>
-                        <a class="collapse-item" href="order.jsp?action=new">New Work Order</a>
+                        <a class="collapse-item" href="Orders?action=new">New Work Order</a>
                         <% } %>
                         <a class="collapse-item" href="workorders.jsp">View Work Orders</a>
                     </div>

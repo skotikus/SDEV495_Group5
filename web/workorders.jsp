@@ -11,6 +11,34 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%@include file="WEB-INF/includes/head.jspf" %>
+<%
+    String result = (String) request.getAttribute("completed");
+    if("deleted".equals(result)){      
+%>
+
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong>Success!</strong> The order has been ${completed}.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<% 
+    }
+else if("error".equals(result)){
+%>
+
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  <strong>ERROR:</strong> Action was not processed.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<% 
+    }
+%>
+
 <!-- Begin Page Content -->
 <div class="container-fluid">    
 <!-- DataTables Example -->
@@ -26,11 +54,11 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fas fa-building"></i> </span>
                     </div>
-                    <input name="srcLocation" class="form-control" placeholder="Src Location" type="text">
+                    <input name="srcLoc" class="form-control" placeholder="Src Location" type="text">
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="far fa-building"></i> </span>
                     </div>
-                    <input name="destLocation" class="form-control" placeholder="Dest Location" type="text">
+                    <input name="destLoc" class="form-control" placeholder="Dest Location" type="text">
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fas fa-cubes"></i> </span>
                     </div>
@@ -38,7 +66,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                     </div>
-                    <input name="emp" class="form-control" placeholder="Worker" type="text">
+                    <input name="userName" class="form-control" placeholder="Worker" type="text">
                     <button name="listOrders" type="submit" class="btn btn-primary">Search</button>
                 </form><!-- form-group// -->
             </div>
