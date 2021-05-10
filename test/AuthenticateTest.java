@@ -34,8 +34,6 @@ public class AuthenticateTest {
     public void testDoPost() throws Exception {
         System.out.println("doPost - Correct Credentials");
         
-         
-        
         //Create the mock request and responses
         HttpServletRequest request = mock(HttpServletRequest.class);       
         HttpServletResponse response = mock(HttpServletResponse.class);
@@ -49,7 +47,6 @@ public class AuthenticateTest {
         //run the method being tested
         new Authenticate().doPost(request, response);
         
-                
         assertTrue(("scott").equals(session.getAttribute("UserName")));
         
     }
